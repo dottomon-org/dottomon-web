@@ -16,7 +16,8 @@ export function sameOpts(a: ResolvedOpts | null, b: ResolvedOpts | null): boolea
     a.symmetric === b.symmetric &&
     a.outline === b.outline &&
     a.face === b.face &&
-    a.legs === b.legs
+    a.legs === b.legs &&
+    a.gapFill === b.gapFill
   );
 }
 
@@ -28,7 +29,12 @@ function normalize(f: unknown): Fav | null {
   const { legMode, ...rest } = raw.opts;
   return {
     seed: raw.seed,
-    opts: { ...rest, legs: rest.legs ?? (legMode as ResolvedOpts["legs"]) ?? "auto" },
+    opts: {
+      ...rest,
+      legs: rest.legs ?? (legMode as ResolvedOpts["legs"]) ?? "auto",
+      // gapFill導入前の保存データは、coreの動的デフォルト（レトロ形状=ON）と同じ値で補完
+      gapFill: rest.gapFill ?? (!rest.connected && rest.symmetric),
+    },
   };
 }
 
