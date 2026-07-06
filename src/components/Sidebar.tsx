@@ -7,6 +7,7 @@ export interface Tweaks {
   outline: boolean;
   face: boolean;
   legs: Legs;
+  gapFill: boolean;
 }
 
 interface Props {
@@ -100,6 +101,12 @@ export default function Sidebar(p: Props) {
             <label className="trow">
               <input type="checkbox" checked={p.tweaks.face} onChange={(e) => p.onTweaks({ ...p.tweaks, face: e.target.checked })} />
               {p.t.face}
+            </label>
+          )}
+          {p.preset !== "mochi" && (
+            <label className="trow">
+              <input type="checkbox" checked={p.tweaks.gapFill} onChange={(e) => p.onTweaks({ ...p.tweaks, gapFill: e.target.checked })} />
+              {p.t.gapFill}
             </label>
           )}
           {p.preset === "mochi" && (
