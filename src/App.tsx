@@ -22,13 +22,14 @@ interface PlayerState {
 }
 
 function tweaksFor(preset: Preset): Tweaks {
-  return { outline: true, face: preset !== "retro", legs: "auto" };
+  // すきまなくし はスタイルごとの標準の見た目に合わせる（レトロ=ON / カオス=OFF）
+  return { outline: true, face: preset !== "retro", legs: "auto", gapFill: preset === "retro" };
 }
 
 function optsFor(preset: Preset, tweaks: Tweaks): ResolvedOpts {
   if (preset === "mochi") return resolveOptions({ preset, ...tweaks });
-  if (preset === "retro") return resolveOptions({ preset, outline: tweaks.outline, face: tweaks.face });
-  return resolveOptions({ preset: "chaos" }); // カオスは固定
+  if (preset === "retro") return resolveOptions({ preset, outline: tweaks.outline, face: tweaks.face, gapFill: tweaks.gapFill });
+  return resolveOptions({ preset: "chaos", gapFill: tweaks.gapFill }); // カオスは すきまなくし のみ可変
 }
 
 export default function App() {
