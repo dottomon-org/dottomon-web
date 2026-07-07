@@ -154,7 +154,7 @@
 
   #player { position: fixed; top: 0; left: 0; width: 64px; height: 64px; z-index: 50; cursor: pointer; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4)); }
   #player svg { width: 100%; height: 100%; display: block; }
-  /* バーチャルスティック: タッチ端末でのみ画面全体が入力ゾーンになる（デスクトップは素通し） */
+  /* Virtual joystick: the whole screen becomes the input zone on touch devices only (desktop passes through) */
   #stickzone { position: fixed; inset: 0; z-index: 49; pointer-events: none; touch-action: none; }
   @media (pointer: coarse) { #stickzone { pointer-events: auto; } }
   #stickbase { display: none; position: fixed; width: 96px; height: 96px; margin: -48px 0 0 -48px; border-radius: 50%; border: 2px solid rgba(232, 232, 242, 0.4); background: rgba(232, 232, 242, 0.08); z-index: 52; pointer-events: none; }

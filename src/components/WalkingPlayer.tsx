@@ -19,7 +19,8 @@ interface Props {
   onDismiss: () => void;
 }
 
-// バーチャルスティック: タップ位置が基部になり、そこからのドラッグ量で移動方向・速さが決まる
+// Virtual joystick: the touch point becomes the stick base, and the drag offset from it
+// decides the movement direction and speed
 const STICK_RADIUS = 48;
 const STICK_DEADZONE = 10;
 
@@ -67,7 +68,7 @@ export default function WalkingPlayer({ seed, opts, x0, y0, hint, onDismiss }: P
     const tick = (tms: number) => {
       const dt = Math.min(50, tms - s.last);
       s.last = tms;
-      // キー入力（±1）とスティック（-1..1のアナログ）を同じ速度ベクトルとして扱う
+      // Treat key input (±1) and the stick (-1..1 analog) as the same velocity vector
       let vx = 0, vy = 0;
       if (s.keys.has("left")) vx -= 1;
       if (s.keys.has("right")) vx += 1;
@@ -128,16 +129,16 @@ export default function WalkingPlayer({ seed, opts, x0, y0, hint, onDismiss }: P
     };
   }, [sprites, onDismiss]);
 
-  // ---- バーチャルスティック（タッチ端末のみ。#stickzone はpointer:coarse時だけ反応する） ----
+  // ---- virtual joystick (touch devices only; #stickzone accepts input only for coarse pointers) ----
   const stickDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "mouse") return;
     const s = st.current;
-    if (s.stick) return; // 2本目の指は無視
+    if (s.stick) return; // ignore a second finger
     s.stick = { id: e.pointerId, cx: e.clientX, cy: e.clientY, vx: 0, vy: 0 };
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
     } catch {
-      /* 合成イベント等でcaptureできなくても動作は継続できる */
+      /* capture can fail for synthetic events; the stick still works without it */
     }
     const base = baseRef.current!;
     base.style.left = `${e.clientX}px`;
@@ -156,7 +157,7 @@ export default function WalkingPlayer({ seed, opts, x0, y0, hint, onDismiss }: P
       oy *= STICK_RADIUS / d;
     }
     knobRef.current!.style.transform = `translate(${ox}px, ${oy}px)`;
-    // 倒し量に応じたアナログ速度（クランプ済みオフセット/半径 = 長さ0..1のベクトル）
+    // analog speed from the tilt (clamped offset / radius = vector of length 0..1)
     const dead = d < STICK_DEADZONE;
     s.stick.vx = dead ? 0 : ox / STICK_RADIUS;
     s.stick.vy = dead ? 0 : oy / STICK_RADIUS;
