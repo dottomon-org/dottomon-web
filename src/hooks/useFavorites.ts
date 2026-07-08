@@ -32,7 +32,8 @@ function normalize(f: unknown): Fav | null {
     opts: {
       ...rest,
       legs: rest.legs ?? (legMode as ResolvedOpts["legs"]) ?? "auto",
-      // gapFill導入前の保存データは、coreの動的デフォルト（レトロ形状=ON）と同じ値で補完
+      // Favorites saved before gapFill existed are backfilled with the same dynamic
+      // default core uses (ON for retro-shaped options)
       gapFill: rest.gapFill ?? (!rest.connected && rest.symmetric),
     },
   };
