@@ -162,6 +162,11 @@
   .vhead .dl { position: static; font-size: 11px; }
   .vopts { list-style: none; margin: -4px 0 12px; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 3px 14px; font-size: 11px; color: var(--dim); }
   .vopts li::before { content: "▸ "; color: var(--acid); }
+  .vstats { margin: -6px 0 12px; }
+  .vstats summary { cursor: pointer; font-size: 11px; color: var(--dim); width: fit-content; }
+  .vstats summary::marker { color: var(--acid); }
+  .vstats summary:hover { color: var(--text); }
+  .vstats .stats { margin: 8px 0 2px; }
   .vgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
   .vtile { position: relative; border: 1px solid var(--line); border-radius: 8px; padding: 8px 8px 6px; text-align: center; }
   .vtile .vimg { border-radius: 6px; }

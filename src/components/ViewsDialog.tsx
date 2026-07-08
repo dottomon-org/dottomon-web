@@ -6,6 +6,7 @@ import type { Strings } from "../i18n";
 import { downloadGif, downloadPng, downloadZip } from "../lib/actions";
 import { bgStyle } from "../lib/checker";
 import { DlIcon } from "./Icons";
+import StatsPanel from "./StatsPanel";
 
 export interface ViewsTarget {
   seed: string;
@@ -73,6 +74,11 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
               <li key={k}>{k}: {v}</li>
             ))}
           </ul>
+          {/* Collapsed by default to keep the dialog compact */}
+          <details className="vstats">
+            <summary>{t.statsToggle}</summary>
+            <StatsPanel seed={target.seed} opts={target.opts} dict={dict} />
+          </details>
           <div className="vgrid">
             {VIEWS.map((v) => (
               <div className="vtile" key={v}>
