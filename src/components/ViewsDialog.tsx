@@ -75,8 +75,14 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
           </ul>
           <div className="vgrid">
             {VIEWS.map((v) => (
-              <div className="vtile" key={v} style={{ background: bgStyle(bg, 14) }}>
-                <MonsterAvatar seed={target.seed} options={target.opts} view={v} size="100%" style={{ aspectRatio: "1", display: "block" }} />
+              <div className="vtile" key={v}>
+                {/* Checker background only behind the image so the label below
+                    stays readable on the dialog background. height:auto — the
+                    default 100% resolves against the tile's own (auto) height,
+                    which would push the label out of the tile box */}
+                <div className="vimg" style={{ background: bgStyle(bg, 14) }}>
+                  <MonsterAvatar seed={target.seed} options={target.opts} view={v} size="100%" style={{ aspectRatio: "1", height: "auto", display: "block" }} />
+                </div>
                 <div className="s">{t.viewLabels[v]}</div>
                 <div className="dlbar">
                   <button className="dl" title={t.dlPng} aria-label={`${t.viewLabels[v]}: ${t.dlPng}`} onClick={() => downloadPng(target.seed, target.opts, v, 512, bg)}>
