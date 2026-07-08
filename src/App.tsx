@@ -2,12 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { randomName, resolveOptions, type Preset, type ResolvedOpts } from "@dotmon/core";
 import { useLocale } from "./i18n";
 import { useFavorites } from "./hooks/useFavorites";
+import { useMediaQuery } from "./hooks/useMediaQuery";
 import { useNameHistory } from "./hooks/useNameHistory";
 import { readSeedFromUrl, useSyncSeedUrl } from "./hooks/useSeedUrl";
 import { downloadGif, downloadPng } from "./lib/actions";
 import Sidebar, { type Tweaks } from "./components/Sidebar";
 import MainPreview from "./components/MainPreview";
 import MonsterCell from "./components/MonsterCell";
+import NameForm from "./components/NameForm";
 import FavoritesSection from "./components/FavoritesSection";
 import ViewsDialog, { type ViewsTarget } from "./components/ViewsDialog";
 import HelpDialog from "./components/HelpDialog";
@@ -50,6 +52,8 @@ export default function App() {
   const opts = useMemo(() => optsFor(preset, tweaks), [preset, tweaks]);
   const bg = bgTrans ? "transparent" : bgColor;
   const coarsePointer = useMemo(() => window.matchMedia("(pointer: coarse)").matches, []);
+  // Phones get a shorter herd (9 in 3 columns) to keep vertical scroll reasonable
+  const phone = useMediaQuery("(max-width: 560px)");
   const favorites = useFavorites();
   const nameHistory = useNameHistory();
   useSyncSeedUrl(seed);
@@ -76,6 +80,19 @@ export default function App() {
     setTweaks(tweaksFor(p));
   };
 
+  const handleRandom = () => {
+    const n = randomName(locale);
+    setInput(n);
+    commit(n);
+  };
+  const handleBack = () => {
+    const prev = nameHistory.back();
+    if (prev !== null) {
+      setInput(prev);
+      setSeed(prev);
+    }
+  };
+
   const spawnPlayer = useCallback((seed_: string, opts_: ResolvedOpts | null, rect: DOMRect) => {
     playerId.current += 1;
     setPlayer({
@@ -87,7 +104,8 @@ export default function App() {
     });
   }, []);
 
-  const herd = useMemo(() => (seed ? Array.from({ length: 28 }, (_, i) => `${seed}-${i + 1}`) : []), [seed]);
+  const herdCount = phone ? 9 : 28;
+  const herd = useMemo(() => (seed ? Array.from({ length: herdCount }, (_, i) => `${seed}-${i + 1}`) : []), [seed, herdCount]);
 
   return (
     <>
@@ -116,19 +134,9 @@ export default function App() {
             input={input}
             onInput={setInput}
             onGenerate={() => commit(input)}
-            onRandom={() => {
-              const n = randomName(locale);
-              setInput(n);
-              commit(n);
-            }}
+            onRandom={handleRandom}
             canBack={nameHistory.canBack}
-            onBack={() => {
-              const prev = nameHistory.back();
-              if (prev !== null) {
-                setInput(prev);
-                setSeed(prev);
-              }
-            }}
+            onBack={handleBack}
             onHelp={() => setHelpOpen(true)}
             seed={seed || "dotmon"}
             preset={preset}
@@ -161,8 +169,23 @@ export default function App() {
               />
             )}
 
+            {/* Mobile-only quick access to the name controls (also kept in the settings drawer) */}
+            <section className="panel" id="quickname">
+              <h2>{t.nameSection}</h2>
+              <NameForm
+                t={t}
+                input={input}
+                onInput={setInput}
+                onGenerate={() => commit(input)}
+                onRandom={handleRandom}
+                canBack={nameHistory.canBack}
+                onBack={handleBack}
+                onHelp={() => setHelpOpen(true)}
+              />
+            </section>
+
             <section className="panel">
-              <h2>{t.herd(28)}</h2>
+              <h2>{t.herd(herd.length)}</h2>
               <div className="grid">
                 {herd.map((s) => (
                   <MonsterCell

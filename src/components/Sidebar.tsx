@@ -2,6 +2,7 @@ import { presets, type Legs, type Preset } from "@dotmon/core";
 import type { LocaleDict } from "@dotmon/core/locales";
 import { MonsterAvatar } from "@dotmon/react";
 import type { Strings } from "../i18n";
+import NameForm from "./NameForm";
 
 export interface Tweaks {
   outline: boolean;
@@ -47,27 +48,16 @@ export default function Sidebar(p: Props) {
 
       <section>
         <h2>{p.t.nameSection}</h2>
-        <div className="namerow">
-          <input
-            type="text"
-            value={p.input}
-            spellCheck={false}
-            placeholder={p.t.namePlaceholder}
-            aria-label={p.t.nameSection}
-            onChange={(e) => p.onInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && p.onGenerate()}
-          />
-          {p.canBack && (
-            <button id="backbtn" title={p.t.backTitle} aria-label={p.t.backTitle} onClick={p.onBack}>
-              ↩
-            </button>
-          )}
-        </div>
-        <div className="btnrow">
-          <button className="primary" onClick={p.onGenerate}>{p.t.generate}</button>
-          <button onClick={p.onRandom}>{p.t.random}</button>
-        </div>
-        <button className="linklike" onClick={p.onHelp}>{p.t.help}</button>
+        <NameForm
+          t={p.t}
+          input={p.input}
+          onInput={p.onInput}
+          onGenerate={p.onGenerate}
+          onRandom={p.onRandom}
+          canBack={p.canBack}
+          onBack={p.onBack}
+          onHelp={p.onHelp}
+        />
       </section>
 
       <section>

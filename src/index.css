@@ -42,7 +42,7 @@
   button:focus-visible { outline: 2px solid rgba(184, 245, 66, 0.55); outline-offset: 2px; }
   input[type="text"]:focus-visible, select:focus-visible, input[type="color"]:focus-visible, input[type="checkbox"]:focus-visible { outline: 2px solid rgba(184, 245, 66, 0.55); outline-offset: 2px; }
   dialog:focus, dialog:focus-visible { outline: none; }
-  #backbtn { padding: 9px 12px; font-size: 15px; line-height: 1; }
+  .backbtn { padding: 9px 12px; font-size: 15px; line-height: 1; }
   .btnrow { display: flex; gap: 8px; margin-top: 10px; }
   .btnrow button { flex: 1; }
 
@@ -65,13 +65,21 @@
   input[type="color"] { width: 40px; height: 28px; padding: 2px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
 
   /* ---------- モバイル: サイドバーをドロワー化 ---------- */
-  #menubtn { display: none; position: fixed; top: 14px; right: 14px; z-index: 55; box-shadow: 0 3px 10px rgba(0,0,0,.4); }
+  /* Bottom-left so it never covers the locale button in the header */
+  #menubtn { display: none; position: fixed; bottom: 14px; left: 14px; z-index: 55; box-shadow: 0 3px 10px rgba(0,0,0,.4); }
   #scrim { display: none; position: fixed; inset: 0; background: rgba(6, 6, 14, 0.6); z-index: 59; }
   #scrim.show { display: block; }
+  /* Mobile-only quick name controls between the main preview and the herd */
+  #quickname { display: none; }
   @media (max-width: 800px) {
-    .lab { grid-template-columns: 1fr; }
+    body { padding: 18px 12px 76px; }
+    .lab { grid-template-columns: 1fr; gap: 12px; }
+    .stage { gap: 12px; }
+    .panel { padding: 12px; }
+    .preview { gap: 12px; }
+    #quickname { display: block; }
     #menubtn { display: block; }
-    #sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: min(320px, 86vw); max-height: none; z-index: 60; border-radius: 0 12px 12px 0; transform: translateX(-105%); transition: transform 0.22s ease; }
+    #sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: min(320px, 86vw); max-height: none; z-index: 60; border-radius: 0 12px 12px 0; transform: translateX(-105%); transition: transform 0.22s ease; padding: 18px; }
     #sidebar.open { transform: none; }
     #menuclose { display: grid; position: absolute; top: 10px; right: 10px; width: 26px; height: 26px; place-items: center; font-size: 12px; padding: 0; border-radius: 6px; }
     @media (prefers-reduced-motion: reduce) { #sidebar { transition: none; } }
@@ -79,7 +87,13 @@
 
   /* ---------- プレビュー / グリッド ---------- */
   .preview { display: grid; grid-template-columns: 210px 1fr; gap: 18px; align-items: center; }
-  @media (max-width: 560px) { .preview { grid-template-columns: 1fr; justify-items: center; } }
+  @media (max-width: 560px) {
+    .preview { grid-template-columns: 1fr; justify-items: center; }
+    /* Breathing room between the stats block and the card edges */
+    .preview .meta { width: 100%; padding: 0 16px; }
+    /* Exactly 3 columns on phones (the herd itself shrinks to 9 — see App) */
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
   .mainmon { position: relative; width: 210px; height: 210px; background: repeating-conic-gradient(#ffffff 0% 25%, #f0f0e8 0% 50%) 0 0 / 20px 20px; border: 1px solid var(--line); border-radius: 10px; display: grid; place-items: center; }
   .mon { position: relative; }
   .meta { font-size: 12.5px; color: var(--dim); min-width: 0; }
@@ -113,6 +127,24 @@
   .mainmon .fav:hover, .mainmon .fav.on { opacity: 1; }
   @media (hover: none) { .fav { opacity: 0.7; } }
 
+  /* ---------- タッチ端末: タップしやすいオーバーレイボタン ---------- */
+  /* Pointer devices show the three actions inline (display:contents keeps the
+     existing .dlbar flex layout); touch devices collapse them behind a "⋯"
+     button that opens a speech-bubble menu. */
+  .dl.more { display: none; }
+  .dlmenu { display: contents; }
+  @media (pointer: coarse) {
+    .fav, .cell .fav { width: 24px; height: 24px; padding: 4px; opacity: 0.85; background: rgba(16, 16, 31, 0.45); }
+    .mainmon .fav { width: 26px; height: 26px; padding: 4px; opacity: 0.85; }
+    .dlbar, .cell .dlbar { flex-direction: row; opacity: 1; }
+    .dl.more, .cell .dl.more { display: grid; width: 24px; height: 24px; padding: 0; font-size: 13px; opacity: 0.85; background: rgba(16, 16, 31, 0.45); }
+    .mainmon .dl.more { width: 26px; height: 26px; }
+    .dlmenu { display: none; }
+    .dlbar.open .dlmenu { display: flex; position: absolute; top: calc(100% + 7px); right: 0; gap: 7px; background: #16162b; border: 1px solid var(--line); border-radius: 10px; padding: 7px; z-index: 5; box-shadow: 0 5px 14px rgba(0, 0, 0, 0.45); }
+    .dlbar.open .dlmenu::before { content: ""; position: absolute; top: -5.5px; right: 9px; width: 9px; height: 9px; background: #16162b; border-left: 1px solid var(--line); border-top: 1px solid var(--line); transform: rotate(45deg); }
+    .dlbar.open .dlmenu .dl, .cell .dlbar.open .dlmenu .dl { width: 36px; height: 36px; padding: 7px; font-size: 10px; opacity: 1; }
+  }
+
   .favhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .favhead h2 { margin-bottom: 12px; }
   #favclear { flex: none; background: none; border: 1px solid var(--line); border-radius: 6px; color: var(--dim); font-size: 10px; padding: 4px 9px; margin-bottom: 12px; }
@@ -128,11 +160,14 @@
   .vhead .t { font-size: 14px; color: var(--dim); word-break: break-all; }
   .vhead .t #vtitle { color: var(--acid); font-size: 19px; font-weight: 700; }
   .vhead .dl { position: static; font-size: 11px; }
-  .vopts { list-style: none; margin: -4px 0 12px; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 3px 14px; font-size: 11px; color: var(--dim); }
+  .vopts { list-style: none; margin: 12px 0 0; padding: 0 2px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 3px 14px; font-size: 11px; color: var(--dim); }
   .vopts li::before { content: "▸ "; color: var(--acid); }
+  .vstats { padding: 0 2px; margin-bottom: 14px; }
+  .vstats .stats { margin-top: 0; }
   .vgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
-  .vtile { position: relative; border: 1px solid var(--line); border-radius: 8px; padding: 8px 8px 4px; text-align: center; }
-  .vtile .s { font-size: 10px; color: #74748e; margin-top: 2px; }
+  .vtile { position: relative; border: 1px solid var(--line); border-radius: 8px; padding: 8px 8px 6px; text-align: center; }
+  .vtile .vimg { border-radius: 6px; }
+  .vtile .s { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 0.08em; margin-top: 5px; }
   .vtile .dlbar { top: 3px; right: 3px; }
 
 
