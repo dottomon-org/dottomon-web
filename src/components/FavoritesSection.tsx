@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import type { ResolvedOpts } from "@dotmon/core";
+import type { Locale, ResolvedOpts } from "@dotmon/core";
 import { MonsterAvatar } from "@dotmon/react";
 import type { Strings } from "../i18n";
 import type { Fav } from "../hooks/useFavorites";
+import { downloadFavoritesZip } from "../lib/actions";
 import { bgStyle } from "../lib/checker";
 import MonsterCell from "./MonsterCell";
 
@@ -12,6 +13,7 @@ interface Props {
   currentOpts: ResolvedOpts;
   bg: string;
   animate: boolean;
+  locale: Locale;
   t: Strings;
   onToggle: (seed: string, opts: ResolvedOpts | null) => void;
   onClear: () => void;
@@ -32,6 +34,7 @@ const FLOAT_SIZE = 88;
 export default function FavoritesSection(p: Props) {
   const [reorder, setReorder] = useState(false);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [zipProgress, setZipProgress] = useState<[number, number] | null>(null);
   const floatRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ idx: number; id: number; x: number; y: number } | null>(null);
   const pressRef = useRef<{ timer: ReturnType<typeof setTimeout>; x: number; y: number } | null>(null);
@@ -185,16 +188,36 @@ export default function FavoritesSection(p: Props) {
             {p.t.favDone}
           </button>
         ) : (
-          <button
-            id="favclear"
-            onClick={() => {
-              if (!p.favs.length) return;
-              if (!confirm(p.t.favClearConfirm)) return;
-              p.onClear();
-            }}
-          >
-            {p.t.favClear}
-          </button>
+          <div className="favbtns">
+            {p.favs.length > 0 && (
+              <button
+                id="favzip"
+                disabled={zipProgress !== null}
+                onClick={async () => {
+                  if (zipProgress) return;
+                  const items = p.favs.map((f) => ({ seed: f.seed, opts: f.opts ?? p.currentOpts }));
+                  setZipProgress([0, items.length]);
+                  try {
+                    await downloadFavoritesZip(items, p.bg, p.locale, (done, total) => setZipProgress([done, total]));
+                  } finally {
+                    setZipProgress(null);
+                  }
+                }}
+              >
+                {zipProgress ? p.t.favZipBusy(zipProgress[0], zipProgress[1]) : p.t.favZip}
+              </button>
+            )}
+            <button
+              id="favclear"
+              onClick={() => {
+                if (!p.favs.length) return;
+                if (!confirm(p.t.favClearConfirm)) return;
+                p.onClear();
+              }}
+            >
+              {p.t.favClear}
+            </button>
+          </div>
         )}
       </div>
       <div
