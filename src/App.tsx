@@ -3,8 +3,9 @@ import { randomName, resolveOptions, type Preset, type ResolvedOpts } from "@dot
 import { useLocale } from "./i18n";
 import { useFavorites } from "./hooks/useFavorites";
 import { useNameHistory } from "./hooks/useNameHistory";
-import { readSeedFromUrl, useSyncSeedUrl } from "./hooks/useSeedUrl";
+import { readSeedFromUrl } from "./hooks/useSeedUrl";
 import { downloadGif, downloadPng } from "./lib/actions";
+import { buildShareUrl, clearShareParams, readShareFromUrl, tweaksFor } from "./lib/shareUrl";
 import Sidebar, { type Tweaks } from "./components/Sidebar";
 import MainPreview from "./components/MainPreview";
 import MonsterCell from "./components/MonsterCell";
@@ -21,11 +22,6 @@ interface PlayerState {
   y: number;
 }
 
-function tweaksFor(preset: Preset): Tweaks {
-  // gapFill defaults to each style's standard look (retro = ON / chaos = OFF)
-  return { outline: true, face: preset !== "retro", legs: "auto", gapFill: preset === "retro" };
-}
-
 function optsFor(preset: Preset, tweaks: Tweaks): ResolvedOpts {
   if (preset === "mochi") return resolveOptions({ preset, ...tweaks });
   if (preset === "retro") return resolveOptions({ preset, outline: tweaks.outline, face: tweaks.face, gapFill: tweaks.gapFill });
@@ -36,8 +32,9 @@ export default function App() {
   const { locale, setLocale, t, dict } = useLocale();
   const [input, setInput] = useState("");
   const [seed, setSeed] = useState("");
-  const [preset, setPreset] = useState<Preset>("mochi");
-  const [tweaks, setTweaks] = useState<Tweaks>(tweaksFor("mochi"));
+  // Style/options come from the URL too, so a share link reproduces the look
+  const [preset, setPreset] = useState<Preset>(() => readShareFromUrl().preset);
+  const [tweaks, setTweaks] = useState<Tweaks>(() => readShareFromUrl().tweaks);
   const [animate, setAnimate] = useState(true);
   const [bgTrans, setBgTrans] = useState(true);
   const [bgColor, setBgColor] = useState("#a5bdd2");
@@ -52,13 +49,18 @@ export default function App() {
   const coarsePointer = useMemo(() => window.matchMedia("(pointer: coarse)").matches, []);
   const favorites = useFavorites();
   const nameHistory = useNameHistory();
-  useSyncSeedUrl(seed);
+  // Captured once before the URL is cleaned — the mount effect runs twice
+  // under StrictMode, and the second run must see the same value
+  const [urlSeed] = useState(readSeedFromUrl);
 
   useEffect(() => {
-    const name = readSeedFromUrl() ?? randomName(locale);
+    const name = urlSeed ?? randomName(locale);
     setInput(name);
     setSeed(name);
     nameHistory.push(name);
+    // Share params are a one-shot initializer (preset/tweaks state read them
+    // before mount) — strip them so the address bar stays clean
+    clearShareParams();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -158,6 +160,7 @@ export default function App() {
                 onPng={() => downloadPng(seed, opts, "front", 512, bg)}
                 onGif={() => downloadGif(seed, opts, "front", 256, bg)}
                 onPlay={(rect) => spawnPlayer(seed, null, rect)}
+                onShare={() => buildShareUrl(seed, preset, tweaks)}
               />
             )}
 
