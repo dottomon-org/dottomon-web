@@ -45,12 +45,16 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
     [target],
   );
 
+  // Show only the options the user can control for this style in the options panel
+  // (mochi: outline/face/legs, retro: outline/face/gapFill, chaos: gapFill).
+  // Combinations that match no preset (= custom) show every row
+  const presetKey = target ? presetKeyFromOpts(target.opts) : "custom";
   const items = target
     ? [
         [t.styleSection, presetLabel(target.opts, t, dict)],
-        [t.outline, onOff(target.opts.outline, t)],
-        [t.face, onOff(target.opts.face, t)],
-        [t.legsLabel, dict.legs[drawn]],
+        ...(presetKey !== "chaos" ? [[t.outline, onOff(target.opts.outline, t)], [t.face, onOff(target.opts.face, t)]] : []),
+        ...(presetKey === "mochi" || presetKey === "custom" ? [[t.legsLabel, dict.legs[drawn]]] : []),
+        ...(presetKey !== "mochi" ? [[t.gapFill, onOff(target.opts.gapFill, t)]] : []),
       ]
     : [];
 
