@@ -211,6 +211,7 @@ export default function App() {
               currentOpts={opts}
               bg={bg}
               animate={animate}
+              locale={locale}
               t={t}
               onToggle={favorites.toggle}
               onClear={favorites.clear}

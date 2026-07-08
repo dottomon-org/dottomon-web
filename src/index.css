@@ -145,10 +145,12 @@
     .dlbar.open .dlmenu .dl, .cell .dlbar.open .dlmenu .dl { width: 36px; height: 36px; padding: 7px; font-size: 10px; opacity: 1; }
   }
 
-  .favhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .favhead { display: flex; align-items: center; justify-content: space-between; gap: 0 10px; flex-wrap: wrap; }
   .favhead h2 { margin-bottom: 12px; }
-  #favclear { flex: none; background: none; border: 1px solid var(--line); border-radius: 6px; color: var(--dim); font-size: 10px; padding: 4px 9px; margin-bottom: 12px; }
-  #favclear:hover { color: var(--text); border-color: var(--dim); }
+  .favbtns { display: flex; gap: 6px; }
+  #favclear, #favzip { flex: none; background: none; border: 1px solid var(--line); border-radius: 6px; color: var(--dim); font-size: 10px; padding: 4px 9px; margin-bottom: 12px; }
+  #favclear:hover, #favzip:hover:not(:disabled) { color: var(--text); border-color: var(--dim); }
+  #favzip:disabled { cursor: default; font-variant-numeric: tabular-nums; }
   #favdone { flex: none; font-size: 11px; padding: 4px 12px; margin-bottom: 12px; }
 
   /* ---------- お気に入りの並べ替え（長押しでモード開始） ---------- */
