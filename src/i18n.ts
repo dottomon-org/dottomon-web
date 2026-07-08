@@ -47,7 +47,8 @@ export const STRINGS = {
     dlPng: "Save as image",
     dlGif: "Save as animated GIF",
     dlPlay: "Take a walk (arrow keys)",
-    shareLink: "Copy share link (this exact look)",
+    // Non-breaking spaces keep the parenthetical whole, so a wrap lands before "("
+    shareLink: "Copy share link (this exact look)",
     shareCopied: "Copied!",
     favTitle: "Favorite (saved as name + settings)",
     close: "Close",
