@@ -135,8 +135,19 @@ export default function FavoritesSection(p: Props) {
     const kd = (e: KeyboardEvent) => {
       if (e.key === "Escape") exitReorder();
     };
+    // Tapping anywhere that isn't a favorite also leaves reorder mode
+    // (ignored mid-drag so a stray second finger can't cancel a move)
+    const down = (e: PointerEvent) => {
+      if (dragRef.current) return;
+      if ((e.target as HTMLElement | null)?.closest?.("[data-favslot]")) return;
+      exitReorder();
+    };
     document.addEventListener("keydown", kd);
-    return () => document.removeEventListener("keydown", kd);
+    document.addEventListener("pointerdown", down);
+    return () => {
+      document.removeEventListener("keydown", kd);
+      document.removeEventListener("pointerdown", down);
+    };
   }, [reorder, exitReorder]);
 
   const slotDown = (idx: number) => (e: React.PointerEvent) => {
