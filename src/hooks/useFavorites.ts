@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ResolvedOpts } from "@dotmon/core";
 
-// キーはHTML版から互換維持。旧形式（seed文字列 / legMode）は読み込み時に移行する
-const FAV_KEY = "monsterlab:favorites";
+// Old entry shapes (bare seed strings / legMode) are migrated on load
+const FAV_KEY = "dotmon:favorites";
+// Key from before the service was named; migrated to FAV_KEY on load
+const OLD_FAV_KEY = "monsterlab:favorites";
 
 export interface Fav {
   seed: string;
@@ -41,7 +43,7 @@ function normalize(f: unknown): Fav | null {
 
 function load(): Fav[] {
   try {
-    const v = JSON.parse(localStorage.getItem(FAV_KEY) ?? "null");
+    const v = JSON.parse(localStorage.getItem(FAV_KEY) ?? localStorage.getItem(OLD_FAV_KEY) ?? "null");
     if (!Array.isArray(v)) return [];
     return v.map(normalize).filter((f): f is Fav => f !== null);
   } catch {
@@ -55,6 +57,7 @@ export function useFavorites() {
   useEffect(() => {
     try {
       localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+      localStorage.removeItem(OLD_FAV_KEY);
     } catch { /* ignore */ }
   }, [favs]);
 
@@ -70,6 +73,16 @@ export function useFavorites() {
     );
   }, []);
   const clear = useCallback(() => setFavs([]), []);
+  /** Reorder: move the favorite at `from` to position `to` */
+  const move = useCallback((from: number, to: number) => {
+    setFavs((prev) => {
+      if (from === to || from < 0 || to < 0 || from >= prev.length || to >= prev.length) return prev;
+      const next = prev.slice();
+      const [item] = next.splice(from, 1);
+      next.splice(to, 0, item);
+      return next;
+    });
+  }, []);
 
-  return { favs, isFav, toggle, clear };
+  return { favs, isFav, toggle, clear, move };
 }

@@ -8,6 +8,7 @@ import { bgStyle } from "../lib/checker";
 import { buildShareUrlFromOpts } from "../lib/shareUrl";
 import { toast } from "./Toast";
 import { DlIcon } from "./Icons";
+import StatsPanel from "./StatsPanel";
 
 export interface ViewsTarget {
   seed: string;
@@ -72,15 +73,19 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
             </span>
             <button className="dl" title={t.close} aria-label={t.close} onClick={() => ref.current!.close()}>✕</button>
           </div>
-          <ul className="vopts">
-            {items.map(([k, v]) => (
-              <li key={k}>{k}: {v}</li>
-            ))}
-          </ul>
+          <div className="vstats">
+            <StatsPanel seed={target.seed} opts={target.opts} dict={dict} />
+          </div>
           <div className="vgrid">
             {VIEWS.map((v) => (
-              <div className="vtile" key={v} style={{ background: bgStyle(bg, 14) }}>
-                <MonsterAvatar seed={target.seed} options={target.opts} view={v} size="100%" style={{ aspectRatio: "1", display: "block" }} />
+              <div className="vtile" key={v}>
+                {/* Checker background only behind the image so the label below
+                    stays readable on the dialog background. height:auto — the
+                    default 100% resolves against the tile's own (auto) height,
+                    which would push the label out of the tile box */}
+                <div className="vimg" style={{ background: bgStyle(bg, 14) }}>
+                  <MonsterAvatar seed={target.seed} options={target.opts} view={v} size="100%" style={{ aspectRatio: "1", height: "auto", display: "block" }} />
+                </div>
                 <div className="s">{t.viewLabels[v]}</div>
                 <div className="dlbar">
                   <button className="dl" title={t.dlPng} aria-label={`${t.viewLabels[v]}: ${t.dlPng}`} onClick={() => downloadPng(target.seed, target.opts, v, 512, bg)}>
@@ -93,6 +98,11 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
               </div>
             ))}
           </div>
+          <ul className="vopts">
+            {items.map(([k, v]) => (
+              <li key={k}>{k}: {v}</li>
+            ))}
+          </ul>
           <div className="btnrow" style={{ marginTop: 14 }}>
             <button
               disabled={copied}
