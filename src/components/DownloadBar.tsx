@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Strings } from "../i18n";
+import { toast } from "./Toast";
 import { CheckIcon, DlIcon, LinkIcon, PlayIcon } from "./Icons";
 
 interface Props {
@@ -24,6 +25,7 @@ export default function DownloadBar({ seed, t, onPng, onGif, onPlay, onShare }: 
     } catch {
       return;
     }
+    toast(t.shareToast);
     setCopied(true);
     clearTimeout(timer.current);
     timer.current = setTimeout(() => setCopied(false), 1400);

@@ -50,6 +50,7 @@ export const STRINGS = {
     // Non-breaking spaces keep the parenthetical whole, so a wrap lands before "("
     shareLink: "Copy share link (this exact look)",
     shareCopied: "Copied!",
+    shareToast: "Copied the share link",
     favTitle: "Favorite (saved as name + settings)",
     close: "Close",
     monTitle: "Click to see all views",
@@ -108,6 +109,7 @@ export const STRINGS = {
     dlPlay: "この子とあそぶ（矢印キーでおさんぽ）",
     shareLink: "共有リンクをコピー（いまのすがた）",
     shareCopied: "コピーしました！",
+    shareToast: "リンクをコピーしました",
     favTitle: "お気に入り（なまえと設定のセットで保存）",
     close: "閉じる",
     monTitle: "クリックですがたを見る",

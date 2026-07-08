@@ -13,6 +13,7 @@ import FavoritesSection from "./components/FavoritesSection";
 import ViewsDialog, { type ViewsTarget } from "./components/ViewsDialog";
 import HelpDialog from "./components/HelpDialog";
 import WalkingPlayer from "./components/WalkingPlayer";
+import ToastHost from "./components/Toast";
 
 interface PlayerState {
   id: number;
@@ -216,6 +217,7 @@ export default function App() {
 
       <ViewsDialog target={viewsTarget} bg={bg} locale={locale} t={t} dict={dict} onClose={() => setViewsTarget(null)} />
       <HelpDialog open={helpOpen} t={t} onClose={() => setHelpOpen(false)} />
+      <ToastHost />
 
       {player && (
         <WalkingPlayer

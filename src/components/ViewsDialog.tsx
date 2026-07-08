@@ -6,6 +6,7 @@ import type { Strings } from "../i18n";
 import { downloadGif, downloadPng, downloadZip } from "../lib/actions";
 import { bgStyle } from "../lib/checker";
 import { buildShareUrlFromOpts } from "../lib/shareUrl";
+import { toast } from "./Toast";
 import { DlIcon } from "./Icons";
 
 export interface ViewsTarget {
@@ -101,6 +102,7 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
                 } catch {
                   return;
                 }
+                toast(t.shareToast);
                 setCopied(true);
                 setTimeout(() => setCopied(false), 1400);
               }}
