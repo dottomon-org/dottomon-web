@@ -74,11 +74,6 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
               <li key={k}>{k}: {v}</li>
             ))}
           </ul>
-          {/* Collapsed by default to keep the dialog compact */}
-          <details className="vstats">
-            <summary>{t.statsToggle}</summary>
-            <StatsPanel seed={target.seed} opts={target.opts} dict={dict} />
-          </details>
           <div className="vgrid">
             {VIEWS.map((v) => (
               <div className="vtile" key={v}>
@@ -100,6 +95,9 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
                 </div>
               </div>
             ))}
+          </div>
+          <div className="vstats">
+            <StatsPanel seed={target.seed} opts={target.opts} dict={dict} />
           </div>
           <div className="btnrow" style={{ marginTop: 14 }}>
             <button
