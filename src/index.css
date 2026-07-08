@@ -110,9 +110,12 @@
   .fav { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; padding: 2px; display: grid; place-items: center; background: rgba(16, 16, 31, 0.72); border: none; border-radius: 5px; color: #fff; cursor: pointer; opacity: 0; z-index: 2; --fav-fill: none; }
   .fav svg { width: 100%; height: 100%; display: block; }
   /* Same resting opacity as the .dl buttons (0.6) so they read equally dark */
-  .cell:hover .fav { opacity: 0.6; }
-  .fav:hover, .fav:focus-visible { opacity: 1; }
-  .fav.on { opacity: 1; color: #ffd23e; --fav-fill: #ffd23e; }
+  .cell:hover .fav:not(.on) { opacity: 0.6; }
+  .fav:hover, .fav:focus-visible { opacity: 1; background: rgba(16, 16, 31, 0.9); }
+  /* Favorited: the yellow star never fades — only the chip behind it is light
+     at rest and darkens on hover, mirroring the other buttons */
+  .fav.on { opacity: 1; color: #ffd23e; --fav-fill: #ffd23e; background: rgba(16, 16, 31, 0.45); }
+  .fav.on:hover, .fav.on:focus-visible { background: rgba(16, 16, 31, 0.9); }
   .mainmon .fav { width: 22px; height: 22px; top: 4px; left: 4px; opacity: 0.6; }
   .mainmon .fav:hover, .mainmon .fav.on { opacity: 1; }
   @media (hover: none) { .fav { opacity: 0.6; } }
