@@ -70,6 +70,16 @@ export function useFavorites() {
     );
   }, []);
   const clear = useCallback(() => setFavs([]), []);
+  /** Reorder: move the favorite at `from` to position `to` */
+  const move = useCallback((from: number, to: number) => {
+    setFavs((prev) => {
+      if (from === to || from < 0 || to < 0 || from >= prev.length || to >= prev.length) return prev;
+      const next = prev.slice();
+      const [item] = next.splice(from, 1);
+      next.splice(to, 0, item);
+      return next;
+    });
+  }, []);
 
-  return { favs, isFav, toggle, clear };
+  return { favs, isFav, toggle, clear, move };
 }
