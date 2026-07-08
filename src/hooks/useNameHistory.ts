@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 
-const HIST_KEY = "monstermaker:history"; // HTML版と互換
+const HIST_KEY = "dotmon:history";
+// Key from before the service was named; migrated to HIST_KEY on load
+const OLD_HIST_KEY = "monstermaker:history";
 
 function load(): string[] {
   try {
-    const v = JSON.parse(localStorage.getItem(HIST_KEY) ?? "null");
+    const v = JSON.parse(localStorage.getItem(HIST_KEY) ?? localStorage.getItem(OLD_HIST_KEY) ?? "null");
     return Array.isArray(v) ? v.filter((s) => typeof s === "string").slice(-10) : [];
   } catch {
     return [];
@@ -17,6 +19,7 @@ export function useNameHistory() {
   useEffect(() => {
     try {
       localStorage.setItem(HIST_KEY, JSON.stringify(hist));
+      localStorage.removeItem(OLD_HIST_KEY);
     } catch { /* ignore */ }
   }, [hist]);
 
