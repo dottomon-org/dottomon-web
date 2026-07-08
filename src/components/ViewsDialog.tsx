@@ -5,6 +5,8 @@ import { MonsterAvatar } from "@dotmon/react";
 import type { Strings } from "../i18n";
 import { downloadGif, downloadPng, downloadZip } from "../lib/actions";
 import { bgStyle } from "../lib/checker";
+import { buildShareUrlFromOpts } from "../lib/shareUrl";
+import { toast } from "./Toast";
 import { DlIcon } from "./Icons";
 import StatsPanel from "./StatsPanel";
 
@@ -27,11 +29,13 @@ interface Props {
 export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const d = ref.current!;
     if (target && !d.open) d.showModal();
     if (!target && d.open) d.close();
+    setCopied(false);
   }, [target]);
 
   useEffect(() => {
@@ -100,6 +104,21 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
             ))}
           </ul>
           <div className="btnrow" style={{ marginTop: 14 }}>
+            <button
+              disabled={copied}
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(buildShareUrlFromOpts(target.seed, target.opts));
+                } catch {
+                  return;
+                }
+                toast(t.shareToast);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 1400);
+              }}
+            >
+              {copied ? t.shareCopied : t.shareLink}
+            </button>
             <button
               className="primary"
               style={{ flex: 1 }}

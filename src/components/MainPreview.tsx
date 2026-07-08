@@ -20,6 +20,7 @@ interface Props {
   onPng: () => void;
   onGif: () => void;
   onPlay: (rect: DOMRect) => void;
+  onShare: () => string;
 }
 
 export default function MainPreview(p: Props) {
@@ -28,7 +29,7 @@ export default function MainPreview(p: Props) {
       <div className="mainmon" style={{ background: bgStyle(p.bg, 20) }}>
         <MonsterAvatar seed={p.seed} options={p.opts} animate={p.animate} size={184} title={p.t.monTitle} />
         <button className="moncover" aria-label={p.t.monTitle} onClick={p.onOpen} />
-        <DownloadBar seed={p.seed} t={p.t} onPng={p.onPng} onGif={p.onGif} onPlay={p.onPlay} />
+        <DownloadBar seed={p.seed} t={p.t} onPng={p.onPng} onGif={p.onGif} onPlay={p.onPlay} onShare={p.onShare} />
         <FavStar seed={p.seed} on={p.favOn} t={p.t} onToggle={p.onToggleFav} />
       </div>
       <div className="meta">

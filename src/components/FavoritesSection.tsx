@@ -6,6 +6,7 @@ import type { Strings } from "../i18n";
 import type { Fav } from "../hooks/useFavorites";
 import { downloadFavoritesZip } from "../lib/actions";
 import { bgStyle } from "../lib/checker";
+import { buildShareUrlFromOpts } from "../lib/shareUrl";
 import MonsterCell from "./MonsterCell";
 
 interface Props {
@@ -251,6 +252,7 @@ export default function FavoritesSection(p: Props) {
                 onPng={() => p.onPng(f.seed, fo)}
                 onGif={() => p.onGif(f.seed, fo)}
                 onPlay={(rect) => p.onPlay(f.seed, f.opts, rect)}
+                onShare={() => buildShareUrlFromOpts(f.seed, fo)}
               />
             </div>
           );

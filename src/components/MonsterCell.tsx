@@ -17,6 +17,7 @@ interface Props {
   onPng: () => void;
   onGif: () => void;
   onPlay: (rect: DOMRect) => void;
+  onShare: () => string;
 }
 
 export default function MonsterCell(p: Props) {
@@ -33,7 +34,7 @@ export default function MonsterCell(p: Props) {
         // クリックはラッパーで拾う
       />
       <button className="moncover" aria-label={`${p.seed}: ${p.t.monTitle}`} onClick={p.onOpen} />
-      <DownloadBar seed={p.seed} t={p.t} onPng={p.onPng} onGif={p.onGif} onPlay={p.onPlay} />
+      <DownloadBar seed={p.seed} t={p.t} onPng={p.onPng} onGif={p.onGif} onPlay={p.onPlay} onShare={p.onShare} />
       <FavStar seed={p.seed} on={p.favOn} t={p.t} onToggle={p.onToggleFav} />
     </div>
   );
