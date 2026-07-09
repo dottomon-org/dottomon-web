@@ -1,5 +1,7 @@
 # dotmon-web
 
+<img width="2110" height="1790" alt="スクリーンショット 2026-07-09 23 51 27" src="https://github.com/user-attachments/assets/755fab60-4b62-418d-815b-9ee098eb4844" />
+
 The official web app for [dotmon](https://github.com/dotmon-org/dotmon) — type a name, get your own pixel monster.
 
 Built with React + Vite on top of the published packages:
