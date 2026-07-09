@@ -78,9 +78,22 @@ export default function App() {
     [nameHistory, locale],
   );
 
+  // While walking, a focused sidebar control (checkbox/select) swallows the
+  // arrow keys — the player looks frozen. Drop focus back to the page so the
+  // walk keeps going; the monster's look updates live from the new settings.
+  const keepWalkable = () => {
+    if (player) (document.activeElement as HTMLElement | null)?.blur();
+  };
+
   const selectPreset = (p: Preset) => {
     setPreset(p);
     setTweaks(tweaksFor(p));
+    keepWalkable();
+  };
+
+  const changeTweaks = (tw: Tweaks) => {
+    setTweaks(tw);
+    keepWalkable();
   };
 
   const handleRandom = () => {
@@ -145,11 +158,11 @@ export default function App() {
             preset={preset}
             onSelectPreset={selectPreset}
             tweaks={tweaks}
-            onTweaks={setTweaks}
+            onTweaks={changeTweaks}
             animate={animate}
-            onAnimate={setAnimate}
+            onAnimate={(v) => { setAnimate(v); keepWalkable(); }}
             bgTrans={bgTrans}
-            onBgTrans={setBgTrans}
+            onBgTrans={(v) => { setBgTrans(v); keepWalkable(); }}
             bgColor={bgColor}
             onBgColor={setBgColor}
           />
