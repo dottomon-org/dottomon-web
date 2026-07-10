@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@dotmon/core": "^0.8.0",
-    "@dotmon/react": "^0.1.7",
+    "@dotmon/react": "^0.1.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
