@@ -109,6 +109,13 @@ export default function Sidebar(p: Props) {
               </select>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Shared across every style, unlike the per-style options above */}
+      <section>
+        <h2>{p.t.displaySection}</h2>
+        <div className="tweaks">
           <label className="trow">
             <input type="checkbox" checked={p.animate} onChange={(e) => p.onAnimate(e.target.checked)} />
             {p.t.animation}
