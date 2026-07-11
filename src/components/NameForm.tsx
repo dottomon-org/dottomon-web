@@ -30,6 +30,7 @@ export default function NameForm(p: Props) {
         />
         {p.canBack && (
           <button
+            type="button"
             className={`${btnShell} flex-none border-line bg-panel2 px-3 py-2.25 text-[15px] leading-none text-ink`}
             title={p.t.backTitle}
             aria-label={p.t.backTitle}
@@ -40,10 +41,19 @@ export default function NameForm(p: Props) {
         )}
       </div>
       <div className="mt-2.5 flex gap-2">
-        <button className={`${btnPrimary} flex-1`} onClick={p.onGenerate}>{p.t.generate}</button>
-        <button className={`${btn} flex-1`} onClick={p.onRandom}>{p.t.random}</button>
+        <button
+          type="button"
+          className={`${btnPrimary} flex-1`}
+          onClick={p.onGenerate}
+        >
+          {p.t.generate}
+        </button>
+        <button type="button" className={`${btn} flex-1`} onClick={p.onRandom}>
+          {p.t.random}
+        </button>
       </div>
       <button
+        type="button"
         className={`w-full cursor-pointer pt-2 text-center text-[11px] text-dim underline underline-offset-[3px] hover:text-acid ${focusRing}`}
         onClick={p.onHelp}
       >

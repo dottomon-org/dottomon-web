@@ -1,8 +1,9 @@
-import { useMemo } from "react";
 import { getStats, type ResolvedOpts } from "@dotmon/core";
 import type { LocaleDict } from "@dotmon/core/locales";
+import { useMemo } from "react";
 
-// バーの色・最大値は表示の都合なのでWeb側が持つ（ライブラリは素の数値を返す）
+// Bar colors and max values are presentation concerns, so the web app owns
+// them (the library returns the raw numbers)
 const ROWS = [
   { k: "hp", max: 800, c: "#8ee06b" },
   { k: "mp", max: 400, c: "#6bb8ff" },
@@ -16,9 +17,17 @@ const ROW_CLS = "grid grid-cols-[62px_34px_1fr] items-center gap-2 text-[11px]";
 const KEY_CLS = "text-dim";
 const VAL_CLS = "text-right font-bold text-ink tabular-nums";
 
-export default function StatsPanel({ seed, opts, dict }: { seed: string; opts: ResolvedOpts; dict: LocaleDict }) {
+export default function StatsPanel({
+  seed,
+  opts,
+  dict,
+}: {
+  seed: string;
+  opts: ResolvedOpts;
+  dict: LocaleDict;
+}) {
   const optsKey = JSON.stringify(opts);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // biome-ignore lint/correctness/useExhaustiveDependencies: opts changes are tracked via its serialized key
   const st = useMemo(() => getStats(seed, opts), [seed, optsKey]);
   return (
     <div className="grid gap-0.5">
@@ -36,7 +45,13 @@ export default function StatsPanel({ seed, opts, dict }: { seed: string; opts: R
           <span className={KEY_CLS}>{dict.stats[r.k]}</span>
           <span className={VAL_CLS}>{st[r.k]}</span>
           <div className="h-3 overflow-hidden border border-line bg-bg">
-            <i className="block h-full" style={{ width: Math.min(100, (st[r.k] / r.max) * 100) + "%", background: r.c }} />
+            <i
+              className="block h-full"
+              style={{
+                width: `${Math.min(100, (st[r.k] / r.max) * 100)}%`,
+                background: r.c,
+              }}
+            />
           </div>
         </div>
       ))}

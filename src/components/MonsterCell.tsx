@@ -26,7 +26,10 @@ export const monCover =
 
 export default function MonsterCell(p: Props) {
   return (
-    <div className="group/cell relative rounded-lg border border-line p-[7px]" style={{ background: bgStyle(p.bg, 12) }}>
+    <div
+      className="group/cell relative rounded-lg border border-line p-[7px]"
+      style={{ background: bgStyle(p.bg, 12) }}
+    >
       <MonsterAvatar
         className="block"
         seed={p.seed}
@@ -35,11 +38,30 @@ export default function MonsterCell(p: Props) {
         size="100%"
         title={`${p.seed}（${p.t.monTitle}）`}
         style={{ aspectRatio: "1", display: "block", cursor: "pointer" }}
-        // クリックはラッパーで拾う
+        // clicks are picked up by the cover button below
       />
-      <button className={monCover} aria-label={`${p.seed}: ${p.t.monTitle}`} onClick={p.onOpen} />
-      <DownloadBar small seed={p.seed} t={p.t} onPng={p.onPng} onGif={p.onGif} onPlay={p.onPlay} onShare={p.onShare} />
-      <FavStar small seed={p.seed} on={p.favOn} t={p.t} onToggle={p.onToggleFav} />
+      <button
+        type="button"
+        className={monCover}
+        aria-label={`${p.seed}: ${p.t.monTitle}`}
+        onClick={p.onOpen}
+      />
+      <DownloadBar
+        small
+        seed={p.seed}
+        t={p.t}
+        onPng={p.onPng}
+        onGif={p.onGif}
+        onPlay={p.onPlay}
+        onShare={p.onShare}
+      />
+      <FavStar
+        small
+        seed={p.seed}
+        on={p.favOn}
+        t={p.t}
+        onToggle={p.onToggleFav}
+      />
     </div>
   );
 }

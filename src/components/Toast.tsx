@@ -37,7 +37,10 @@ export default function ToastHost() {
     push = (text) => {
       const id = nextId++;
       setItems((prev) => [...prev, { id, text }]);
-      setTimeout(() => setItems((prev) => prev.filter((t) => t.id !== id)), TOAST_MS);
+      setTimeout(
+        () => setItems((prev) => prev.filter((t) => t.id !== id)),
+        TOAST_MS,
+      );
       try {
         el?.hidePopover?.();
         el?.showPopover?.();

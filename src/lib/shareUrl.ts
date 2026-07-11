@@ -1,10 +1,20 @@
-import { presetKeyFromOpts, type Legs, type Preset, type ResolvedOpts } from "@dotmon/core";
+import {
+  type Legs,
+  type Preset,
+  presetKeyFromOpts,
+  type ResolvedOpts,
+} from "@dotmon/core";
 import type { Tweaks } from "../components/Sidebar";
 
 /** Default tweaks per style (= what the style buttons reset to) */
 export function tweaksFor(preset: Preset): Tweaks {
   // gapFill defaults to each style's standard look (retro = ON / chaos = OFF)
-  return { outline: true, face: preset !== "retro", legs: "auto", gapFill: preset === "retro" };
+  return {
+    outline: true,
+    face: preset !== "retro",
+    legs: "auto",
+    gapFill: preset === "retro",
+  };
 }
 
 const PRESETS: Preset[] = ["mochi", "retro", "chaos"];
@@ -33,13 +43,20 @@ const SHARE_KEYS = ["seed", "style", ...Object.values(PARAM_OF)];
  * Every controllable key is written explicitly, so a link keeps meaning the
  * same look even if the site's defaults change later.
  */
-export function buildShareUrl(seed: string, preset: Preset, tweaks: Tweaks): string {
+export function buildShareUrl(
+  seed: string,
+  preset: Preset,
+  tweaks: Tweaks,
+): string {
   const url = new URL(location.href);
   url.search = "";
   url.searchParams.set("seed", seed);
   url.searchParams.set("style", preset);
   for (const key of CONTROLLABLE[preset]) {
-    url.searchParams.set(PARAM_OF[key], key === "legs" ? tweaks.legs : tweaks[key] ? "1" : "0");
+    url.searchParams.set(
+      PARAM_OF[key],
+      key === "legs" ? tweaks.legs : tweaks[key] ? "1" : "0",
+    );
   }
   return url.toString();
 }
@@ -49,7 +66,10 @@ export function buildShareUrl(seed: string, preset: Preset, tweaks: Tweaks): str
  * Combinations that match no preset can't be expressed as share params, so
  * they fall back to a seed-only link.
  */
-export function buildShareUrlFromOpts(seed: string, opts: ResolvedOpts): string {
+export function buildShareUrlFromOpts(
+  seed: string,
+  opts: ResolvedOpts,
+): string {
   const key = presetKeyFromOpts(opts);
   if (key === "custom") {
     const url = new URL(location.href);
@@ -57,7 +77,12 @@ export function buildShareUrlFromOpts(seed: string, opts: ResolvedOpts): string 
     url.searchParams.set("seed", seed);
     return url.toString();
   }
-  return buildShareUrl(seed, key, { outline: opts.outline, face: opts.face, legs: opts.legs, gapFill: opts.gapFill });
+  return buildShareUrl(seed, key, {
+    outline: opts.outline,
+    face: opts.face,
+    legs: opts.legs,
+    gapFill: opts.gapFill,
+  });
 }
 
 /**
@@ -70,7 +95,9 @@ export function readShareFromUrl(): { preset: Preset; tweaks: Tweaks } {
   try {
     const q = new URLSearchParams(location.search);
     const s = q.get("style");
-    const preset: Preset = (PRESETS as string[]).includes(s ?? "") ? (s as Preset) : "mochi";
+    const preset: Preset = (PRESETS as string[]).includes(s ?? "")
+      ? (s as Preset)
+      : "mochi";
     const tweaks = tweaksFor(preset);
     for (const key of CONTROLLABLE[preset]) {
       const v = q.get(PARAM_OF[key]);

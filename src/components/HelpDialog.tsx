@@ -2,7 +2,15 @@ import { useEffect, useRef } from "react";
 import type { Strings } from "../i18n";
 import { chipMd, dialogCls, dialogHead, vlist } from "../lib/ui";
 
-export default function HelpDialog({ open, t, onClose }: { open: boolean; t: Strings; onClose: () => void }) {
+export default function HelpDialog({
+  open,
+  t,
+  onClose,
+}: {
+  open: boolean;
+  t: Strings;
+  onClose: () => void;
+}) {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -19,10 +27,24 @@ export default function HelpDialog({ open, t, onClose }: { open: boolean; t: Str
   }, [onClose]);
 
   return (
-    <dialog id="help" className={dialogCls} ref={ref} onClick={(e) => e.target === ref.current && ref.current!.close()}>
+    // biome-ignore lint/a11y/useKeyWithClickEvents: backdrop click-to-close only; <dialog> closes on Esc natively
+    <dialog
+      id="help"
+      className={dialogCls}
+      ref={ref}
+      onClick={(e) => e.target === ref.current && ref.current!.close()}
+    >
       <div className={dialogHead}>
         <span className="text-[14px] break-all text-dim">{t.help}</span>
-        <button className={`${chipMd} text-[11px]`} title={t.close} aria-label={t.close} onClick={() => ref.current!.close()}>✕</button>
+        <button
+          type="button"
+          className={`${chipMd} text-[11px]`}
+          title={t.close}
+          aria-label={t.close}
+          onClick={() => ref.current!.close()}
+        >
+          ✕
+        </button>
       </div>
       <ul className={`${vlist} text-[12px] leading-[1.9] text-dim`}>
         {t.helpItems.map((item) => (

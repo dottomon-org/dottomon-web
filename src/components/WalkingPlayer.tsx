@@ -1,12 +1,16 @@
+import { generateSvg, type ResolvedOpts, type View } from "@dotmon/core";
 import { useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
-import { generateSvg, type ResolvedOpts, type View } from "@dotmon/core";
 
 const KEYMAP: Record<string, "up" | "down" | "left" | "right"> = {
-  ArrowUp: "up", KeyW: "up",
-  ArrowDown: "down", KeyS: "down",
-  ArrowLeft: "left", KeyA: "left",
-  ArrowRight: "right", KeyD: "right",
+  ArrowUp: "up",
+  KeyW: "up",
+  ArrowDown: "down",
+  KeyS: "down",
+  ArrowLeft: "left",
+  KeyA: "left",
+  ArrowRight: "right",
+  KeyD: "right",
 };
 const DIRS: View[] = ["front", "back", "left", "right"];
 
@@ -24,17 +28,38 @@ interface Props {
 const STICK_RADIUS = 48;
 const STICK_DEADZONE = 10;
 
-export default function WalkingPlayer({ seed, opts, x0, y0, hint, onDismiss }: Props) {
+export default function WalkingPlayer({
+  seed,
+  opts,
+  x0,
+  y0,
+  hint,
+  onDismiss,
+}: Props) {
   const elRef = useRef<HTMLDivElement>(null);
   const baseRef = useRef<HTMLDivElement>(null);
   const knobRef = useRef<HTMLDivElement>(null);
   const st = useRef({
-    x: x0, y: y0, dir: "front" as View, moving: false, walkFrame: 0,
-    walkTimer: 0, keys: new Set<string>(), last: 0, curSvg: "",
-    stick: null as { id: number; cx: number; cy: number; vx: number; vy: number } | null,
+    x: x0,
+    y: y0,
+    dir: "front" as View,
+    moving: false,
+    walkFrame: 0,
+    walkTimer: 0,
+    keys: new Set<string>(),
+    last: 0,
+    curSvg: "",
+    stick: null as {
+      id: number;
+      cx: number;
+      cy: number;
+      vx: number;
+      vy: number;
+    } | null,
   });
 
   const optsKey = JSON.stringify(opts);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: opts changes are tracked via its serialized key
   const sprites = useMemo(() => {
     const s = {} as Record<View, { idle: string; walk: [string, string] }>;
     for (const d of DIRS) {
@@ -47,7 +72,6 @@ export default function WalkingPlayer({ seed, opts, x0, y0, hint, onDismiss }: P
       };
     }
     return s;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seed, optsKey]);
 
   useEffect(() => {
@@ -69,7 +93,8 @@ export default function WalkingPlayer({ seed, opts, x0, y0, hint, onDismiss }: P
       const dt = Math.min(50, tms - s.last);
       s.last = tms;
       // Treat key input (±1) and the stick (-1..1 analog) as the same velocity vector
-      let vx = 0, vy = 0;
+      let vx = 0,
+        vy = 0;
       if (s.keys.has("left")) vx -= 1;
       if (s.keys.has("right")) vx += 1;
       if (s.keys.has("up")) vy -= 1;
@@ -180,6 +205,8 @@ export default function WalkingPlayer({ seed, opts, x0, y0, hint, onDismiss }: P
         onPointerUp={stickUp}
         onPointerCancel={stickUp}
       />
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: Esc also dismisses (see keydown handler) */}
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: the walking sprite is a pointer-only toy layer */}
       <div
         id="player"
         className="fixed top-0 left-0 z-[50] size-16 cursor-pointer drop-shadow-[0_3px_5px_rgba(0,0,0,0.4)] [&_svg]:block [&_svg]:size-full"
@@ -192,7 +219,11 @@ export default function WalkingPlayer({ seed, opts, x0, y0, hint, onDismiss }: P
         className="pointer-events-none fixed z-[52] -mt-12 -ml-12 hidden size-24 rounded-full border-2 border-[rgba(232,232,242,0.4)] bg-[rgba(232,232,242,0.08)]"
         ref={baseRef}
       >
-        <div id="stickknob" className="absolute top-1/2 left-1/2 -mt-5 -ml-5 size-10 rounded-full bg-[rgba(232,232,242,0.5)]" ref={knobRef} />
+        <div
+          id="stickknob"
+          className="absolute top-1/2 left-1/2 -mt-5 -ml-5 size-10 rounded-full bg-[rgba(232,232,242,0.5)]"
+          ref={knobRef}
+        />
       </div>
       <div
         id="playhint"

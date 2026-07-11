@@ -25,6 +25,7 @@ export default function FavStar({ seed, on, t, onToggle, small }: Props) {
       : "opacity-60 bg-[rgba(16,16,31,0.72)] text-white hover:opacity-100 pointer-coarse:opacity-85 pointer-coarse:bg-[rgba(16,16,31,0.45)]";
   return (
     <button
+      type="button"
       className={`${chip} absolute z-[2] p-0.5 pointer-coarse:p-1 ${size} ${state}`}
       title={t.favTitle}
       aria-label={`${seed}: ${t.favTitle}`}

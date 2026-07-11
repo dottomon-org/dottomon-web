@@ -1,22 +1,32 @@
+import {
+  type Preset,
+  type ResolvedOpts,
+  randomName,
+  resolveOptions,
+} from "@dotmon/core";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { randomName, resolveOptions, type Preset, type ResolvedOpts } from "@dotmon/core";
-import { useLocale } from "./i18n";
+import FavoritesSection from "./components/FavoritesSection";
+import HelpDialog from "./components/HelpDialog";
+import MainPreview from "./components/MainPreview";
+import MonsterCell from "./components/MonsterCell";
+import NameForm from "./components/NameForm";
+import Sidebar, { type Tweaks } from "./components/Sidebar";
+import ToastHost from "./components/Toast";
+import ViewsDialog, { type ViewsTarget } from "./components/ViewsDialog";
+import WalkingPlayer from "./components/WalkingPlayer";
 import { useFavorites } from "./hooks/useFavorites";
 import { useMediaQuery } from "./hooks/useMediaQuery";
 import { useNameHistory } from "./hooks/useNameHistory";
 import { readSeedFromUrl } from "./hooks/useSeedUrl";
+import { useLocale } from "./i18n";
 import { downloadGif, downloadPng } from "./lib/actions";
-import { buildShareUrl, clearShareParams, readShareFromUrl, tweaksFor } from "./lib/shareUrl";
+import {
+  buildShareUrl,
+  clearShareParams,
+  readShareFromUrl,
+  tweaksFor,
+} from "./lib/shareUrl";
 import { btnPrimary, panel, panelH2 } from "./lib/ui";
-import Sidebar, { type Tweaks } from "./components/Sidebar";
-import MainPreview from "./components/MainPreview";
-import MonsterCell from "./components/MonsterCell";
-import NameForm from "./components/NameForm";
-import FavoritesSection from "./components/FavoritesSection";
-import ViewsDialog, { type ViewsTarget } from "./components/ViewsDialog";
-import HelpDialog from "./components/HelpDialog";
-import WalkingPlayer from "./components/WalkingPlayer";
-import ToastHost from "./components/Toast";
 
 interface PlayerState {
   id: number;
@@ -28,7 +38,13 @@ interface PlayerState {
 
 function optsFor(preset: Preset, tweaks: Tweaks): ResolvedOpts {
   if (preset === "mochi") return resolveOptions({ preset, ...tweaks });
-  if (preset === "retro") return resolveOptions({ preset, outline: tweaks.outline, face: tweaks.face, gapFill: tweaks.gapFill });
+  if (preset === "retro")
+    return resolveOptions({
+      preset,
+      outline: tweaks.outline,
+      face: tweaks.face,
+      gapFill: tweaks.gapFill,
+    });
   return resolveOptions({ preset: "chaos", gapFill: tweaks.gapFill }); // chaos: only gapFill is adjustable
 }
 
@@ -50,7 +66,10 @@ export default function App() {
 
   const opts = useMemo(() => optsFor(preset, tweaks), [preset, tweaks]);
   const bg = bgTrans ? "transparent" : bgColor;
-  const coarsePointer = useMemo(() => window.matchMedia("(pointer: coarse)").matches, []);
+  const coarsePointer = useMemo(
+    () => window.matchMedia("(pointer: coarse)").matches,
+    [],
+  );
   // Phones get a shorter herd (9 in 3 columns) to keep vertical scroll
   // reasonable. 639px = below Tailwind's `sm` breakpoint, where the grid
   // switches to 3 fixed columns
@@ -61,6 +80,7 @@ export default function App() {
   // under StrictMode, and the second run must see the same value
   const [urlSeed] = useState(readSeedFromUrl);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: one-shot mount initializer — must not re-run on later locale/history changes
   useEffect(() => {
     const name = urlSeed ?? randomName(locale);
     setInput(name);
@@ -69,7 +89,6 @@ export default function App() {
     // Share params are a one-shot initializer (preset/tweaks state read them
     // before mount) — strip them so the address bar stays clean
     clearShareParams();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const commit = useCallback(
@@ -112,19 +131,28 @@ export default function App() {
     }
   };
 
-  const spawnPlayer = useCallback((seed_: string, opts_: ResolvedOpts | null, rect: DOMRect) => {
-    playerId.current += 1;
-    setPlayer({
-      id: playerId.current,
-      seed: seed_,
-      opts: opts_,
-      x: Math.min(Math.max(rect.left - 24, 8), window.innerWidth - 72),
-      y: Math.min(Math.max(rect.top - 8, 8), window.innerHeight - 72),
-    });
-  }, []);
+  const spawnPlayer = useCallback(
+    (seed_: string, opts_: ResolvedOpts | null, rect: DOMRect) => {
+      playerId.current += 1;
+      setPlayer({
+        id: playerId.current,
+        seed: seed_,
+        opts: opts_,
+        x: Math.min(Math.max(rect.left - 24, 8), window.innerWidth - 72),
+        y: Math.min(Math.max(rect.top - 8, 8), window.innerHeight - 72),
+      });
+    },
+    [],
+  );
 
   const herdCount = phone ? 9 : 28;
-  const herd = useMemo(() => (seed ? Array.from({ length: herdCount }, (_, i) => `${seed}-${i + 1}`) : []), [seed, herdCount]);
+  const herd = useMemo(
+    () =>
+      seed
+        ? Array.from({ length: herdCount }, (_, i) => `${seed}-${i + 1}`)
+        : [],
+    [seed, herdCount],
+  );
 
   return (
     <>
@@ -132,12 +160,18 @@ export default function App() {
         <header className="mb-5.5">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <div className="mb-1.5 text-[11px] tracking-[0.35em] text-acid uppercase">pixel monster maker</div>
+              <div className="mb-1.5 text-[11px] tracking-[0.35em] text-acid uppercase">
+                pixel monster maker
+              </div>
               <h1 className="text-[clamp(22px,3.6vw,32px)] font-bold tracking-[0.04em]">
-                dotmon<span className="animate-blink text-acid motion-reduce:animate-none">_</span>
+                dotmon
+                <span className="animate-blink text-acid motion-reduce:animate-none">
+                  _
+                </span>
               </h1>
             </div>
             <button
+              type="button"
               className={`flex-none cursor-pointer rounded-lg border border-line bg-panel2 px-3 py-1.5 font-mono text-[11px] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(184,245,66,0.55)]`}
               onClick={() => setLocale(locale === "en" ? "ja" : "en")}
             >
@@ -166,9 +200,15 @@ export default function App() {
             tweaks={tweaks}
             onTweaks={changeTweaks}
             animate={animate}
-            onAnimate={(v) => { setAnimate(v); keepWalkable(); }}
+            onAnimate={(v) => {
+              setAnimate(v);
+              keepWalkable();
+            }}
             bgTrans={bgTrans}
-            onBgTrans={(v) => { setBgTrans(v); keepWalkable(); }}
+            onBgTrans={(v) => {
+              setBgTrans(v);
+              keepWalkable();
+            }}
             bgColor={bgColor}
             onBgColor={setBgColor}
           />
@@ -248,27 +288,52 @@ export default function App() {
 
             <footer className="text-center text-[11px] text-dim">
               {t.footerMade}{" "}
-              <a className="underline hover:text-acid" href="https://github.com/dotmon-org/dotmon" target="_blank" rel="noreferrer">@dotmon/core</a> ·{" "}
-              <a className="underline hover:text-acid" href="https://www.npmjs.com/package/@dotmon/core" target="_blank" rel="noreferrer">npm</a>
+              <a
+                className="underline hover:text-acid"
+                href="https://github.com/dotmon-org/dotmon"
+                target="_blank"
+                rel="noreferrer"
+              >
+                @dotmon/core
+              </a>{" "}
+              ·{" "}
+              <a
+                className="underline hover:text-acid"
+                href="https://www.npmjs.com/package/@dotmon/core"
+                target="_blank"
+                rel="noreferrer"
+              >
+                npm
+              </a>
             </footer>
           </main>
         </div>
       </div>
 
       <button
+        type="button"
         className={`${btnPrimary} fixed bottom-3.5 left-3.5 z-[55] hidden shadow-[0_3px_10px_rgba(0,0,0,0.4)] max-md:block`}
         id="menubtn"
         onClick={() => setDrawerOpen(true)}
       >
         ☰ {t.menuOpen}
       </button>
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: Esc already closes the drawer */}
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: pointer-only backdrop; keyboard users close via Esc or the drawer button */}
       <div
         id="scrim"
         className={`fixed inset-0 z-[59] bg-[rgba(6,6,14,0.6)] ${drawerOpen ? "block" : "hidden"}`}
         onClick={() => setDrawerOpen(false)}
       />
 
-      <ViewsDialog target={viewsTarget} bg={bg} locale={locale} t={t} dict={dict} onClose={() => setViewsTarget(null)} />
+      <ViewsDialog
+        target={viewsTarget}
+        bg={bg}
+        locale={locale}
+        t={t}
+        dict={dict}
+        onClose={() => setViewsTarget(null)}
+      />
       <HelpDialog open={helpOpen} t={t} onClose={() => setHelpOpen(false)} />
       <ToastHost />
 
