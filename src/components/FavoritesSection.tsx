@@ -7,6 +7,7 @@ import type { Fav } from "../hooks/useFavorites";
 import { downloadFavoritesZip } from "../lib/actions";
 import { bgStyle } from "../lib/checker";
 import { buildShareUrlFromOpts } from "../lib/shareUrl";
+import { btnShell, focusRing, panel, panelH2, vnote } from "../lib/ui";
 import MonsterCell from "./MonsterCell";
 
 interface Props {
@@ -31,6 +32,9 @@ interface Props {
 const LONG_PRESS_MS = 500;
 const MOVE_CANCEL_PX = 8;
 const FLOAT_SIZE = 88;
+
+/** Ghost small button (clear all / download all) */
+const ghostBtn = `mb-3 flex-none cursor-pointer rounded-md border border-line bg-transparent px-2.25 py-1 text-[10px] text-dim ${focusRing}`;
 
 export default function FavoritesSection(p: Props) {
   const [reorder, setReorder] = useState(false);
@@ -188,21 +192,40 @@ export default function FavoritesSection(p: Props) {
     if (pr && Math.hypot(e.clientX - pr.x, e.clientY - pr.y) > MOVE_CANCEL_PX) clearPress();
   };
 
+  // Reorder-mode looks are decided here (not by CSS selectors): the dragged
+  // slot ghosts, the hovered slot shows the swap ring, everything else wiggles
+  const slotCls = (i: number) => {
+    const base = "select-none rounded-lg [-webkit-touch-callout:none]";
+    if (!reorder) return `${base} touch-pan-y`;
+    const state =
+      dragIdx === i
+        ? "opacity-35 animate-wiggle even:[animation-delay:0.18s] motion-reduce:animate-none"
+        : targetIdx === i
+          ? "outline-2 outline-acid outline-offset-1 shadow-[0_0_0_4px_rgba(184,245,66,0.18)]"
+          : "animate-wiggle even:[animation-delay:0.18s] motion-reduce:animate-none";
+    return `${base} cursor-grab touch-none **:pointer-events-none ${state}`;
+  };
+
   const dragged = dragIdx !== null ? p.favs[dragIdx] : null;
 
   return (
-    <section className="panel">
-      <div className="favhead">
-        <h2>{p.t.favorites}</h2>
+    <section className={panel}>
+      <div className="flex flex-wrap items-center justify-between gap-x-2.5">
+        <h2 className={panelH2}>{p.t.favorites}</h2>
         {reorder ? (
-          <button id="favdone" className="primary" onClick={exitReorder}>
+          <button
+            id="favdone"
+            className={`${btnShell} mb-3 flex-none border-acid bg-acid px-3 py-1 text-[11px] font-bold text-bg`}
+            onClick={exitReorder}
+          >
             {p.t.favDone}
           </button>
         ) : (
-          <div className="favbtns">
+          <div className="flex gap-1.5">
             {p.favs.length > 0 && (
               <button
                 id="favzip"
+                className={`${ghostBtn} enabled:hover:border-dim enabled:hover:text-ink disabled:cursor-default disabled:tabular-nums`}
                 disabled={zipProgress !== null}
                 onClick={async () => {
                   if (zipProgress) return;
@@ -220,6 +243,7 @@ export default function FavoritesSection(p: Props) {
             )}
             <button
               id="favclear"
+              className={`${ghostBtn} hover:border-dim hover:text-ink`}
               onClick={() => {
                 if (!p.favs.length) return;
                 if (!confirm(p.t.favClearConfirm)) return;
@@ -232,7 +256,7 @@ export default function FavoritesSection(p: Props) {
         )}
       </div>
       <div
-        className={"grid" + (reorder ? " reordering" : "")}
+        className={`grid grid-cols-[repeat(auto-fill,minmax(76px,1fr))] gap-2.5 max-sm:grid-cols-3 ${reorder ? "touch-none" : ""}`}
         onContextMenu={(e) => {
           if (reorder || pressRef.current) e.preventDefault();
         }}
@@ -242,7 +266,7 @@ export default function FavoritesSection(p: Props) {
           return (
             <div
               key={f.seed + "|" + JSON.stringify(f.opts)}
-              className={"favslot" + (dragIdx === i ? " ghost" : "") + (targetIdx === i ? " swaptarget" : "")}
+              className={slotCls(i)}
               data-favslot={i}
               onPointerDown={slotDown(i)}
               onPointerMove={slotMove}
@@ -268,10 +292,15 @@ export default function FavoritesSection(p: Props) {
           );
         })}
       </div>
-      {p.favs.length === 0 && <div className="vnote">{p.t.favEmpty}</div>}
+      {p.favs.length === 0 && <div className={vnote}>{p.t.favEmpty}</div>}
       {dragged &&
         createPortal(
-          <div id="favfloat" ref={floatRef} style={{ background: bgStyle(p.bg, 12) }}>
+          <div
+            id="favfloat"
+            className="pointer-events-none fixed top-0 left-0 z-[70] size-[88px] rounded-lg border border-line p-[7px] shadow-[0_10px_24px_rgba(0,0,0,0.5)]"
+            ref={floatRef}
+            style={{ background: bgStyle(p.bg, 12) }}
+          >
             <MonsterAvatar
               seed={dragged.seed}
               options={dragged.opts ?? p.currentOpts}

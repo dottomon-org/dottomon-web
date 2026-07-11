@@ -171,18 +171,35 @@ export default function WalkingPlayer({ seed, opts, x0, y0, hint, onDismiss }: P
 
   return createPortal(
     <>
+      {/* Virtual joystick: the whole screen is the input zone on touch devices only (desktop passes through) */}
       <div
         id="stickzone"
+        className="pointer-events-none fixed inset-0 z-[49] touch-none pointer-coarse:pointer-events-auto"
         onPointerDown={stickDown}
         onPointerMove={stickMove}
         onPointerUp={stickUp}
         onPointerCancel={stickUp}
       />
-      <div id="player" ref={elRef} onClick={onDismiss} />
-      <div id="stickbase" ref={baseRef}>
-        <div id="stickknob" ref={knobRef} />
+      <div
+        id="player"
+        className="fixed top-0 left-0 z-[50] size-16 cursor-pointer drop-shadow-[0_3px_5px_rgba(0,0,0,0.4)] [&_svg]:block [&_svg]:size-full"
+        ref={elRef}
+        onClick={onDismiss}
+      />
+      {/* Base/knob visibility + position are driven imperatively (inline styles) from the pointer handlers */}
+      <div
+        id="stickbase"
+        className="pointer-events-none fixed z-[52] -mt-12 -ml-12 hidden size-24 rounded-full border-2 border-[rgba(232,232,242,0.4)] bg-[rgba(232,232,242,0.08)]"
+        ref={baseRef}
+      >
+        <div id="stickknob" className="absolute top-1/2 left-1/2 -mt-5 -ml-5 size-10 rounded-full bg-[rgba(232,232,242,0.5)]" ref={knobRef} />
       </div>
-      <div id="playhint">{hint}</div>
+      <div
+        id="playhint"
+        className="pointer-events-none fixed bottom-3.5 left-1/2 z-[51] -translate-x-1/2 rounded-lg border border-line bg-[rgba(16,16,31,0.88)] px-3 py-1.5 text-[11px] whitespace-nowrap text-ink"
+      >
+        {hint}
+      </div>
     </>,
     document.body,
   );

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { Strings } from "../i18n";
+import { chipMd, dialogCls, dialogHead, vlist } from "../lib/ui";
 
 export default function HelpDialog({ open, t, onClose }: { open: boolean; t: Strings; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -18,12 +19,12 @@ export default function HelpDialog({ open, t, onClose }: { open: boolean; t: Str
   }, [onClose]);
 
   return (
-    <dialog id="help" ref={ref} onClick={(e) => e.target === ref.current && ref.current!.close()}>
-      <div className="vhead">
-        <span className="t">{t.help}</span>
-        <button className="dl" title={t.close} aria-label={t.close} onClick={() => ref.current!.close()}>✕</button>
+    <dialog id="help" className={dialogCls} ref={ref} onClick={(e) => e.target === ref.current && ref.current!.close()}>
+      <div className={dialogHead}>
+        <span className="text-[14px] break-all text-dim">{t.help}</span>
+        <button className={`${chipMd} text-[11px]`} title={t.close} aria-label={t.close} onClick={() => ref.current!.close()}>✕</button>
       </div>
-      <ul className="vnote vlist" style={{ marginTop: 0, fontSize: 12, lineHeight: 1.9 }}>
+      <ul className={`${vlist} text-[12px] leading-[1.9] text-dim`}>
         {t.helpItems.map((item) => (
           <li key={item}>{item}</li>
         ))}

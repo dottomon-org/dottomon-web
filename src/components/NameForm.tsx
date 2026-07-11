@@ -1,4 +1,5 @@
 import type { Strings } from "../i18n";
+import { btn, btnPrimary, btnShell, focusRing, inputText } from "../lib/ui";
 
 interface Props {
   t: Strings;
@@ -16,9 +17,10 @@ interface Props {
 export default function NameForm(p: Props) {
   return (
     <>
-      <div className="namerow">
+      <div className="flex gap-2">
         <input
           type="text"
+          className={inputText}
           value={p.input}
           spellCheck={false}
           placeholder={p.t.namePlaceholder}
@@ -27,16 +29,26 @@ export default function NameForm(p: Props) {
           onKeyDown={(e) => e.key === "Enter" && p.onGenerate()}
         />
         {p.canBack && (
-          <button className="backbtn" title={p.t.backTitle} aria-label={p.t.backTitle} onClick={p.onBack}>
+          <button
+            className={`${btnShell} flex-none border-line bg-panel2 px-3 py-2.25 text-[15px] leading-none text-ink`}
+            title={p.t.backTitle}
+            aria-label={p.t.backTitle}
+            onClick={p.onBack}
+          >
             ↩
           </button>
         )}
       </div>
-      <div className="btnrow">
-        <button className="primary" onClick={p.onGenerate}>{p.t.generate}</button>
-        <button onClick={p.onRandom}>{p.t.random}</button>
+      <div className="mt-2.5 flex gap-2">
+        <button className={`${btnPrimary} flex-1`} onClick={p.onGenerate}>{p.t.generate}</button>
+        <button className={`${btn} flex-1`} onClick={p.onRandom}>{p.t.random}</button>
       </div>
-      <button className="linklike" onClick={p.onHelp}>{p.t.help}</button>
+      <button
+        className={`w-full cursor-pointer pt-2 text-center text-[11px] text-dim underline underline-offset-[3px] hover:text-acid ${focusRing}`}
+        onClick={p.onHelp}
+      >
+        {p.t.help}
+      </button>
     </>
   );
 }

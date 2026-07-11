@@ -6,6 +6,7 @@ import type { Strings } from "../i18n";
 import { downloadGif, downloadPng, downloadZip } from "../lib/actions";
 import { bgStyle } from "../lib/checker";
 import { buildShareUrlFromOpts } from "../lib/shareUrl";
+import { btn, btnPrimary, chipMd, dialogCls, dialogHead, vlist, vnote } from "../lib/ui";
 import { toast } from "./Toast";
 import { DlIcon } from "./Icons";
 import StatsPanel from "./StatsPanel";
@@ -64,47 +65,48 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
     : [];
 
   return (
-    <dialog id="views" ref={ref} onClick={(e) => e.target === ref.current && ref.current!.close()}>
+    <dialog id="views" className={dialogCls} ref={ref} onClick={(e) => e.target === ref.current && ref.current!.close()}>
       {target && (
         <>
-          <div className="vhead">
-            <span className="t">
-              <span id="vtitle">{target.seed}</span>{t.viewsTitle}
+          <div className={dialogHead}>
+            <span className="text-[14px] break-all text-dim">
+              <span className="text-[19px] font-bold text-acid" id="vtitle">{target.seed}</span>{t.viewsTitle}
             </span>
-            <button className="dl" title={t.close} aria-label={t.close} onClick={() => ref.current!.close()}>✕</button>
+            <button className={`${chipMd} text-[11px]`} title={t.close} aria-label={t.close} onClick={() => ref.current!.close()}>✕</button>
           </div>
-          <div className="vstats">
+          <div className="mb-3.5 px-0.5">
             <StatsPanel seed={target.seed} opts={target.opts} dict={dict} />
           </div>
-          <div className="vgrid">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(110px,1fr))] gap-2.5">
             {VIEWS.map((v) => (
-              <div className="vtile" key={v}>
+              <div className="relative rounded-lg border border-line px-2 pt-2 pb-1.5 text-center" key={v}>
                 {/* Checker background only behind the image so the label below
                     stays readable on the dialog background. height:auto — the
                     default 100% resolves against the tile's own (auto) height,
                     which would push the label out of the tile box */}
-                <div className="vimg" style={{ background: bgStyle(bg, 14) }}>
+                <div className="rounded-md" style={{ background: bgStyle(bg, 14) }}>
                   <MonsterAvatar seed={target.seed} options={target.opts} view={v} size="100%" style={{ aspectRatio: "1", height: "auto", display: "block" }} />
                 </div>
-                <div className="s">{t.viewLabels[v]}</div>
-                <div className="dlbar">
-                  <button className="dl" title={t.dlPng} aria-label={`${t.viewLabels[v]}: ${t.dlPng}`} onClick={() => downloadPng(target.seed, target.opts, v, 512, bg)}>
+                <div className="mt-[5px] text-[13px] font-bold tracking-[0.08em] text-ink">{t.viewLabels[v]}</div>
+                <div className="absolute top-[3px] right-[3px] z-[2] flex gap-[3px]">
+                  <button className={`${chipMd} text-[7.5px]`} title={t.dlPng} aria-label={`${t.viewLabels[v]}: ${t.dlPng}`} onClick={() => downloadPng(target.seed, target.opts, v, 512, bg)}>
                     <DlIcon />
                   </button>
-                  <button className="dl" title={t.dlGif} aria-label={`${t.viewLabels[v]}: ${t.dlGif}`} onClick={() => downloadGif(target.seed, target.opts, v, 256, bg)}>
+                  <button className={`${chipMd} text-[7.5px]`} title={t.dlGif} aria-label={`${t.viewLabels[v]}: ${t.dlGif}`} onClick={() => downloadGif(target.seed, target.opts, v, 256, bg)}>
                     GIF
                   </button>
                 </div>
               </div>
             ))}
           </div>
-          <ul className="vopts">
+          <ul className="mt-3 grid list-none grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-x-3.5 gap-y-[3px] px-0.5 text-[11px] text-dim [&>li]:before:text-acid [&>li]:before:content-['▸_']">
             {items.map(([k, v]) => (
               <li key={k}>{k}: {v}</li>
             ))}
           </ul>
-          <div className="btnrow" style={{ marginTop: 14 }}>
+          <div className="mt-3.5 flex gap-2">
             <button
+              className={`${btn} flex-1 disabled:cursor-default`}
               disabled={copied}
               onClick={async () => {
                 try {
@@ -120,8 +122,7 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
               {copied ? t.shareCopied : t.shareLink}
             </button>
             <button
-              className="primary"
-              style={{ flex: 1 }}
+              className={`${btnPrimary} flex-1 disabled:cursor-default`}
               disabled={busy}
               onClick={async () => {
                 setBusy(true);
@@ -135,7 +136,7 @@ export default function ViewsDialog({ target, bg, locale, t, dict, onClose }: Pr
               {busy ? t.zipBusy : t.zipButton}
             </button>
           </div>
-          <ul className="vnote vlist">
+          <ul className={`${vnote} ${vlist}`}>
             {t.viewNotes.map((n) => (
               <li key={n}>{n}</li>
             ))}

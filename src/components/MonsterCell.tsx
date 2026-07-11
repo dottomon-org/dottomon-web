@@ -20,11 +20,15 @@ interface Props {
   onShare: () => string;
 }
 
+/** Transparent click layer over the avatar (overlay chips sit above it) */
+export const monCover =
+  "absolute inset-0 z-[1] cursor-pointer rounded-[inherit] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[rgba(184,245,66,0.55)]";
+
 export default function MonsterCell(p: Props) {
   return (
-    <div className="cell" style={{ background: bgStyle(p.bg, 12) }}>
+    <div className="group/cell relative rounded-lg border border-line p-[7px]" style={{ background: bgStyle(p.bg, 12) }}>
       <MonsterAvatar
-        className="mon"
+        className="block"
         seed={p.seed}
         options={p.opts}
         animate={p.animate}
@@ -33,9 +37,9 @@ export default function MonsterCell(p: Props) {
         style={{ aspectRatio: "1", display: "block", cursor: "pointer" }}
         // クリックはラッパーで拾う
       />
-      <button className="moncover" aria-label={`${p.seed}: ${p.t.monTitle}`} onClick={p.onOpen} />
-      <DownloadBar seed={p.seed} t={p.t} onPng={p.onPng} onGif={p.onGif} onPlay={p.onPlay} onShare={p.onShare} />
-      <FavStar seed={p.seed} on={p.favOn} t={p.t} onToggle={p.onToggleFav} />
+      <button className={monCover} aria-label={`${p.seed}: ${p.t.monTitle}`} onClick={p.onOpen} />
+      <DownloadBar small seed={p.seed} t={p.t} onPng={p.onPng} onGif={p.onGif} onPlay={p.onPlay} onShare={p.onShare} />
+      <FavStar small seed={p.seed} on={p.favOn} t={p.t} onToggle={p.onToggleFav} />
     </div>
   );
 }
