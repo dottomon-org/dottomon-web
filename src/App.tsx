@@ -7,6 +7,7 @@ import { useNameHistory } from "./hooks/useNameHistory";
 import { readSeedFromUrl } from "./hooks/useSeedUrl";
 import { downloadGif, downloadPng } from "./lib/actions";
 import { buildShareUrl, clearShareParams, readShareFromUrl, tweaksFor } from "./lib/shareUrl";
+import { btnPrimary, panel, panelH2 } from "./lib/ui";
 import Sidebar, { type Tweaks } from "./components/Sidebar";
 import MainPreview from "./components/MainPreview";
 import MonsterCell from "./components/MonsterCell";
@@ -50,8 +51,10 @@ export default function App() {
   const opts = useMemo(() => optsFor(preset, tweaks), [preset, tweaks]);
   const bg = bgTrans ? "transparent" : bgColor;
   const coarsePointer = useMemo(() => window.matchMedia("(pointer: coarse)").matches, []);
-  // Phones get a shorter herd (9 in 3 columns) to keep vertical scroll reasonable
-  const phone = useMediaQuery("(max-width: 560px)");
+  // Phones get a shorter herd (9 in 3 columns) to keep vertical scroll
+  // reasonable. 639px = below Tailwind's `sm` breakpoint, where the grid
+  // switches to 3 fixed columns
+  const phone = useMediaQuery("(max-width: 639px)");
   const favorites = useFavorites();
   const nameHistory = useNameHistory();
   // Captured once before the URL is cleaned — the mount effect runs twice
@@ -125,23 +128,26 @@ export default function App() {
 
   return (
     <>
-      <div className="wrap">
-        <header>
-          <div className="headtop">
+      <div className="mx-auto max-w-[1020px]">
+        <header className="mb-5.5">
+          <div className="flex items-start justify-between gap-3">
             <div>
-              <div className="eyebrow">pixel monster maker</div>
-              <h1>
-                dotmon<span className="blink">_</span>
+              <div className="mb-1.5 text-[11px] tracking-[0.35em] text-acid uppercase">pixel monster maker</div>
+              <h1 className="text-[clamp(22px,3.6vw,32px)] font-bold tracking-[0.04em]">
+                dotmon<span className="animate-blink text-acid motion-reduce:animate-none">_</span>
               </h1>
             </div>
-            <button className="localebtn" onClick={() => setLocale(locale === "en" ? "ja" : "en")}>
+            <button
+              className={`flex-none cursor-pointer rounded-lg border border-line bg-panel2 px-3 py-1.5 font-mono text-[11px] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgba(184,245,66,0.55)]`}
+              onClick={() => setLocale(locale === "en" ? "ja" : "en")}
+            >
               {locale === "en" ? "日本語" : "English"}
             </button>
           </div>
-          <p className="sub">{t.sub}</p>
+          <p className="mt-1.5 text-[12.5px] text-dim">{t.sub}</p>
         </header>
 
-        <div className="lab">
+        <div className="grid grid-cols-[300px_1fr] items-start gap-4.5 max-md:grid-cols-1 max-md:gap-3">
           <Sidebar
             open={drawerOpen}
             onCloseDrawer={() => setDrawerOpen(false)}
@@ -167,7 +173,7 @@ export default function App() {
             onBgColor={setBgColor}
           />
 
-          <main className="stage">
+          <main className="grid min-w-0 gap-4.5 max-md:gap-3">
             {seed && (
               <MainPreview
                 seed={seed}
@@ -187,8 +193,8 @@ export default function App() {
             )}
 
             {/* Mobile-only quick access to the name controls (also kept in the settings drawer) */}
-            <section className="panel" id="quickname">
-              <h2>{t.nameSection}</h2>
+            <section className={`${panel} hidden max-md:block`} id="quickname">
+              <h2 className={panelH2}>{t.nameSection}</h2>
               <NameForm
                 t={t}
                 input={input}
@@ -201,9 +207,9 @@ export default function App() {
               />
             </section>
 
-            <section className="panel">
-              <h2>{t.herd(herd.length)}</h2>
-              <div className="grid">
+            <section className={panel}>
+              <h2 className={panelH2}>{t.herd(herd.length)}</h2>
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(76px,1fr))] gap-2.5 max-sm:grid-cols-3">
                 {herd.map((s) => (
                   <MonsterCell
                     key={s}
@@ -240,18 +246,27 @@ export default function App() {
               onPlay={spawnPlayer}
             />
 
-            <footer>
-              {t.footerMade} <a href="https://github.com/dotmon-org/dotmon" target="_blank" rel="noreferrer">@dotmon/core</a> ·{" "}
-              <a href="https://www.npmjs.com/package/@dotmon/core" target="_blank" rel="noreferrer">npm</a>
+            <footer className="text-center text-[11px] text-dim">
+              {t.footerMade}{" "}
+              <a className="underline hover:text-acid" href="https://github.com/dotmon-org/dotmon" target="_blank" rel="noreferrer">@dotmon/core</a> ·{" "}
+              <a className="underline hover:text-acid" href="https://www.npmjs.com/package/@dotmon/core" target="_blank" rel="noreferrer">npm</a>
             </footer>
           </main>
         </div>
       </div>
 
-      <button className="primary" id="menubtn" onClick={() => setDrawerOpen(true)}>
+      <button
+        className={`${btnPrimary} fixed bottom-3.5 left-3.5 z-[55] hidden shadow-[0_3px_10px_rgba(0,0,0,0.4)] max-md:block`}
+        id="menubtn"
+        onClick={() => setDrawerOpen(true)}
+      >
         ☰ {t.menuOpen}
       </button>
-      <div id="scrim" className={drawerOpen ? "show" : ""} onClick={() => setDrawerOpen(false)} />
+      <div
+        id="scrim"
+        className={`fixed inset-0 z-[59] bg-[rgba(6,6,14,0.6)] ${drawerOpen ? "block" : "hidden"}`}
+        onClick={() => setDrawerOpen(false)}
+      />
 
       <ViewsDialog target={viewsTarget} bg={bg} locale={locale} t={t} dict={dict} onClose={() => setViewsTarget(null)} />
       <HelpDialog open={helpOpen} t={t} onClose={() => setHelpOpen(false)} />

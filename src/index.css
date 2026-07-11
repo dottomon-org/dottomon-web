@@ -1,233 +1,30 @@
+@import "tailwindcss";
 
-  :root {
-    --bg: #10101f;
-    --panel: #1a1a30;
-    --panel2: #22223c;
-    --line: #34345a;
-    --text: #e8e8f2;
-    --dim: #8f8fb0;
-    --acid: #b8f542;
-    --pink: #ff6bb3;
-    --font-mono: "SF Mono", "Consolas", "Menlo", monospace;
+/* Design tokens + keyframes only — all component styling lives in the JSX as
+   Tailwind utilities. Base styles for <body>/#root are classes in index.html. */
+@theme {
+  --color-bg: #10101f;
+  --color-panel: #1a1a30;
+  --color-panel2: #22223c;
+  --color-line: #34345a;
+  --color-ink: #e8e8f2;
+  --color-dim: #8f8fb0;
+  --color-acid: #b8f542;
+  --font-mono: "SF Mono", "Consolas", "Menlo", monospace;
+
+  --animate-blink: blink 1.2s steps(2) infinite;
+  --animate-wiggle: wiggle 0.35s ease-in-out infinite;
+  --animate-toastin: toastin 0.18s ease-out;
+
+  @keyframes blink {
+    50% { opacity: 0; }
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); padding: 28px 20px 60px; line-height: 1.7; }
-  .wrap { max-width: 1020px; margin: 0 auto; }
-
-  header { margin-bottom: 22px; }
-  .headtop { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-  .localebtn { font-size: 11px; padding: 6px 12px; }
-  .eyebrow { color: var(--acid); font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 6px; }
-  h1 { font-size: clamp(22px, 3.6vw, 32px); letter-spacing: 0.04em; }
-  h1 .blink { color: var(--acid); animation: blink 1.2s steps(2) infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
-  @media (prefers-reduced-motion: reduce) { h1 .blink { animation: none; } }
-  .sub { color: var(--dim); font-size: 12.5px; margin-top: 6px; }
-
-  .lab { display: grid; grid-template-columns: 300px 1fr; gap: 18px; align-items: start; }
-  .stage { display: grid; gap: 18px; min-width: 0; }
-
-  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
-  .panel h2 { font-size: 11px; letter-spacing: 0.3em; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; }
-
-  /* ---------- サイドバー ---------- */
-  #sidebar { position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; }
-  #sidebar section + section { margin-top: 22px; }
-  #menuclose { display: none; }
-  .namerow { display: flex; gap: 8px; }
-  input[type="text"] { flex: 1; min-width: 0; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; color: var(--text); font-family: var(--font-mono); font-size: 14px; padding: 9px 11px; outline: none; }
-  input[type="text"]:focus { border-color: var(--acid); }
-  button { font-family: var(--font-mono); font-size: 12.5px; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel2); color: var(--text); cursor: pointer; flex: none; }
-  button.primary { background: var(--acid); border-color: var(--acid); color: #10101f; font-weight: 700; }
-  button:focus-visible { outline: 2px solid rgba(184, 245, 66, 0.55); outline-offset: 2px; }
-  input[type="text"]:focus-visible, select:focus-visible, input[type="color"]:focus-visible, input[type="checkbox"]:focus-visible { outline: 2px solid rgba(184, 245, 66, 0.55); outline-offset: 2px; }
-  dialog:focus, dialog:focus-visible { outline: none; }
-  .backbtn { padding: 9px 12px; font-size: 15px; line-height: 1; }
-  .btnrow { display: flex; gap: 8px; margin-top: 10px; }
-  .btnrow button { flex: 1; }
-
-  .styles { display: grid; gap: 8px; }
-  .stylecard { display: grid; grid-template-columns: 54px 1fr; gap: 10px; align-items: center; text-align: left; padding: 9px 10px; background: var(--panel2); border: 2px solid var(--line); border-radius: 10px; width: 100%; }
-  .stylecard:hover { border-color: var(--dim); }
-  .stylecard.sel { border-color: var(--acid); box-shadow: 0 0 0 3px rgba(184, 245, 66, 0.12); }
-  .stylecard .thumb { width: 54px; height: 54px; border-radius: 6px; background: repeating-conic-gradient(#ffffff 0% 25%, #f0f0e8 0% 50%) 0 0 / 9px 9px; display: grid; place-items: center; }
-  .stylecard .thumb svg { width: 48px; height: 48px; }
-  .stylecard .sname { font-size: 13px; font-weight: 700; }
-  .stylecard.sel .sname { color: var(--acid); }
-  .stylecard .sdesc { font-size: 10px; color: var(--dim); line-height: 1.5; }
-
-  .tweaks { display: grid; }
-  .trow { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 9px 0; border-top: 1px dashed var(--line); }
-  .tweaks .trow:first-child { border-top: none; padding-top: 2px; }
-  .trow input[type="checkbox"] { accent-color: var(--acid); width: 15px; height: 15px; }
-  select { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; color: var(--text); font-family: var(--font-mono); font-size: 12px; padding: 6px 8px; outline: none; cursor: pointer; }
-  select:focus { border-color: var(--acid); }
-  input[type="color"] { width: 40px; height: 28px; padding: 2px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
-
-  /* ---------- モバイル: サイドバーをドロワー化 ---------- */
-  /* Bottom-left so it never covers the locale button in the header */
-  #menubtn { display: none; position: fixed; bottom: 14px; left: 14px; z-index: 55; box-shadow: 0 3px 10px rgba(0,0,0,.4); }
-  #scrim { display: none; position: fixed; inset: 0; background: rgba(6, 6, 14, 0.6); z-index: 59; }
-  #scrim.show { display: block; }
-  /* Mobile-only quick name controls between the main preview and the herd */
-  #quickname { display: none; }
-  @media (max-width: 800px) {
-    body { padding: 18px 12px 76px; }
-    .lab { grid-template-columns: 1fr; gap: 12px; }
-    .stage { gap: 12px; }
-    .panel { padding: 12px; }
-    .preview { gap: 12px; }
-    #quickname { display: block; }
-    #menubtn { display: block; }
-    #sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: min(320px, 86vw); max-height: none; z-index: 60; border-radius: 0 12px 12px 0; transform: translateX(-105%); transition: transform 0.22s ease; padding: 18px; }
-    #sidebar.open { transform: none; }
-    #menuclose { display: grid; position: absolute; top: 10px; right: 10px; width: 26px; height: 26px; place-items: center; font-size: 12px; padding: 0; border-radius: 6px; }
-    @media (prefers-reduced-motion: reduce) { #sidebar { transition: none; } }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-1.2deg); }
+    50% { transform: rotate(1.2deg); }
   }
-
-  /* ---------- プレビュー / グリッド ---------- */
-  .preview { display: grid; grid-template-columns: 210px 1fr; gap: 18px; align-items: center; }
-  @media (max-width: 560px) {
-    .preview { grid-template-columns: 1fr; justify-items: center; }
-    /* Breathing room between the stats block and the card edges */
-    .preview .meta { width: 100%; padding: 0 16px; }
-    /* Exactly 3 columns on phones (the herd itself shrinks to 9 — see App) */
-    .grid { grid-template-columns: repeat(3, 1fr); }
+  @keyframes toastin {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; }
   }
-  .mainmon { position: relative; width: 210px; height: 210px; background: repeating-conic-gradient(#ffffff 0% 25%, #f0f0e8 0% 50%) 0 0 / 20px 20px; border: 1px solid var(--line); border-radius: 10px; display: grid; place-items: center; }
-  .mon { position: relative; }
-  .meta { font-size: 12.5px; color: var(--dim); min-width: 0; }
-  .meta b { color: var(--text); }
-  .nameline { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
-  .nameline .nlabel { flex: none; }
-  .meta .seedname { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--acid); font-size: 19px; font-weight: 700; letter-spacing: 0.02em; }
-  .meta div + div { margin-top: 8px; }
-
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 10px; }
-  .cell { position: relative; background: repeating-conic-gradient(#ffffff 0% 25%, #f0f0e8 0% 50%) 0 0 / 12px 12px; border: 1px solid var(--line); border-radius: 8px; padding: 7px; }
-  /* クリック領域: アバターの上に透明ボタンを重ねる（アイコン類はさらに上のz-index） */
-  .moncover { position: absolute; inset: 0; background: none; border: none; padding: 0; cursor: pointer; z-index: 1; border-radius: inherit; }
-  .moncover:focus-visible { outline: 2px solid rgba(184, 245, 66, 0.55); outline-offset: -2px; }
-
-  .dlbar { position: absolute; top: 4px; right: 4px; display: flex; gap: 3px; z-index: 2; }
-  .dl { width: 22px; height: 22px; flex: none; padding: 3px; display: grid; place-items: center; background: rgba(16, 16, 31, 0.72); border: none; border-radius: 5px; color: #fff; font-family: var(--font-mono); font-size: 7.5px; font-weight: 700; cursor: pointer; opacity: 0.6; }
-  .dl:hover { opacity: 1; background: rgba(16, 16, 31, 0.9); }
-  .dl svg { width: 100%; height: 100%; display: block; }
-  .dl:focus-visible { outline: 2px solid var(--acid); outline-offset: 1px; }
-  /* Anchored to both edges + space-between so the top/bottom margins match;
-     gap 0 lets the distribution absorb small cells without overflowing */
-  .cell .dlbar { top: 3px; bottom: 3px; right: 3px; opacity: 0; flex-direction: column; justify-content: space-between; gap: 0; }
-  .cell .dl { width: 18px; height: 18px; padding: 2px; font-size: 6.5px; }
-  .cell:hover .dlbar, .cell .dlbar:focus-within { opacity: 1; }
-  @media (hover: none) { .cell .dlbar { opacity: 1; } }
-
-  .fav { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; padding: 2px; display: grid; place-items: center; background: rgba(16, 16, 31, 0.72); border: none; border-radius: 5px; color: #fff; cursor: pointer; opacity: 0; z-index: 2; --fav-fill: none; }
-  .fav svg { width: 100%; height: 100%; display: block; }
-  /* Same resting opacity as the .dl buttons (0.6) so they read equally dark.
-     :not(:hover)/:not(:focus-visible) keep this from outweighing the
-     higher-contrast direct-hover rule below (it has lower specificity) */
-  .cell:hover .fav:not(.on):not(:hover):not(:focus-visible) { opacity: 0.6; }
-  .fav:hover, .fav:focus-visible { opacity: 1; background: rgba(16, 16, 31, 0.9); }
-  /* Favorited: the yellow star never fades — only the chip behind it is light
-     at rest and darkens on hover, mirroring the other buttons */
-  .fav.on { opacity: 1; color: #ffd23e; --fav-fill: #ffd23e; background: rgba(16, 16, 31, 0.45); }
-  .fav.on:hover, .fav.on:focus-visible { background: rgba(16, 16, 31, 0.9); }
-  .mainmon .fav { width: 22px; height: 22px; top: 4px; left: 4px; opacity: 0.6; }
-  .mainmon .fav:hover, .mainmon .fav.on { opacity: 1; }
-  @media (hover: none) { .fav { opacity: 0.6; } }
-
-  /* ---------- タッチ端末: タップしやすいオーバーレイボタン ---------- */
-  /* Pointer devices show the three actions inline (display:contents keeps the
-     existing .dlbar flex layout); touch devices collapse them behind a "⋯"
-     button that opens a speech-bubble menu. */
-  .dl.more { display: none; }
-  .dlmenu { display: contents; }
-  @media (pointer: coarse) {
-    .fav, .cell .fav { width: 24px; height: 24px; padding: 4px; opacity: 0.85; background: rgba(16, 16, 31, 0.45); }
-    .mainmon .fav { width: 26px; height: 26px; padding: 4px; opacity: 0.85; }
-    .dlbar, .cell .dlbar { flex-direction: row; opacity: 1; }
-    .dl.more, .cell .dl.more { display: grid; width: 24px; height: 24px; padding: 0; font-size: 13px; opacity: 0.85; background: rgba(16, 16, 31, 0.45); }
-    .mainmon .dl.more { width: 26px; height: 26px; }
-    .dlmenu { display: none; }
-    .dlbar.open .dlmenu { display: flex; position: absolute; top: calc(100% + 7px); right: 0; gap: 7px; background: #16162b; border: 1px solid var(--line); border-radius: 10px; padding: 7px; z-index: 5; box-shadow: 0 5px 14px rgba(0, 0, 0, 0.45); }
-    .dlbar.open .dlmenu::before { content: ""; position: absolute; top: -5.5px; right: 9px; width: 9px; height: 9px; background: #16162b; border-left: 1px solid var(--line); border-top: 1px solid var(--line); transform: rotate(45deg); }
-    .dlbar.open .dlmenu .dl, .cell .dlbar.open .dlmenu .dl { width: 36px; height: 36px; padding: 7px; font-size: 10px; opacity: 1; }
-  }
-
-  .favhead { display: flex; align-items: center; justify-content: space-between; gap: 0 10px; flex-wrap: wrap; }
-  .favhead h2 { margin-bottom: 12px; }
-  .favbtns { display: flex; gap: 6px; }
-  #favclear, #favzip { flex: none; background: none; border: 1px solid var(--line); border-radius: 6px; color: var(--dim); font-size: 10px; padding: 4px 9px; margin-bottom: 12px; }
-  #favclear:hover, #favzip:hover:not(:disabled) { color: var(--text); border-color: var(--dim); }
-  #favzip:disabled { cursor: default; font-variant-numeric: tabular-nums; }
-  #favdone { flex: none; font-size: 11px; padding: 4px 12px; margin-bottom: 12px; }
-
-  /* ---------- お気に入りの並べ替え（長押しでモード開始） ---------- */
-  .favslot { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: pan-y; }
-  .grid.reordering, .grid.reordering .favslot { touch-action: none; }
-  .grid.reordering .favslot { cursor: grab; }
-  /* Reorder mode locks every other interaction on the cells */
-  .grid.reordering .cell .moncover, .grid.reordering .cell .dlbar, .grid.reordering .cell .fav { pointer-events: none; }
-  .grid.reordering .favslot .cell { animation: favwiggle 0.35s ease-in-out infinite; }
-  .grid.reordering .favslot:nth-child(2n) .cell { animation-delay: 0.18s; }
-  .favslot.ghost .cell { opacity: 0.35; }
-  /* The cell the dragged favorite will swap with */
-  .favslot.swaptarget .cell { outline: 2px solid var(--acid); outline-offset: 1px; animation: none; box-shadow: 0 0 0 4px rgba(184, 245, 66, 0.18); }
-  @keyframes favwiggle { 0%, 100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.2deg); } }
-  @media (prefers-reduced-motion: reduce) { .grid.reordering .favslot .cell { animation: none; } }
-  #favfloat { position: fixed; top: 0; left: 0; width: 88px; height: 88px; z-index: 70; pointer-events: none; border: 1px solid var(--line); border-radius: 8px; padding: 7px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5); }
-
-  .vnote { font-size: 11px; color: var(--dim); margin-top: 12px; }
-  ul.vlist { list-style: none; padding: 0; display: grid; gap: 3px; }
-  ul.vlist li::before { content: "▸ "; color: var(--acid); }
-
-  dialog#views, dialog#help { position: fixed; inset: 0; margin: auto; max-height: calc(100vh - 60px); overflow-y: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; color: var(--text); font-family: var(--font-mono); max-width: 560px; width: calc(100% - 40px); }
-  dialog#views::backdrop, dialog#help::backdrop { background: rgba(6, 6, 14, 0.72); }
-  .vhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .vhead .t { font-size: 14px; color: var(--dim); word-break: break-all; }
-  .vhead .t #vtitle { color: var(--acid); font-size: 19px; font-weight: 700; }
-  .vhead .dl { position: static; font-size: 11px; }
-  .vopts { list-style: none; margin: 12px 0 0; padding: 0 2px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 3px 14px; font-size: 11px; color: var(--dim); }
-  .vopts li::before { content: "▸ "; color: var(--acid); }
-  .vstats { padding: 0 2px; margin-bottom: 14px; }
-  .vstats .stats { margin-top: 0; }
-  .vgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
-  .vtile { position: relative; border: 1px solid var(--line); border-radius: 8px; padding: 8px 8px 6px; text-align: center; }
-  .vtile .vimg { border-radius: 6px; }
-  .vtile .s { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 0.08em; margin-top: 5px; }
-  .vtile .dlbar { top: 3px; right: 3px; }
-
-
-  .stats { display: grid; gap: 2px; margin-top: 10px; }
-  .stat { display: grid; grid-template-columns: 62px 34px 1fr; align-items: center; gap: 8px; font-size: 11px; }
-  .stat .sk { color: var(--dim); }
-  .stat .sv { text-align: right; color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
-  .stat .sbar { height: 12px; background: var(--bg); border: 1px solid var(--line); overflow: hidden; }
-  .stat .sbar i { display: block; height: 100%; }
-  .statchip { display: flex; align-items: center; }
-  .chip { font-size: 10.5px; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 1px 11px; background: var(--panel2); line-height: 1.6; }
-
-  .linklike { background: none; border: none; color: var(--dim); text-decoration: underline; text-underline-offset: 3px; font-size: 11px; padding: 8px 0 0; cursor: pointer; width: 100%; text-align: center; }
-  .linklike:hover { color: var(--acid); }
-
-  footer { text-align: center; font-size: 11px; color: var(--dim); }
-  footer a { color: var(--dim); }
-  footer a:hover { color: var(--acid); }
-
-  #player { position: fixed; top: 0; left: 0; width: 64px; height: 64px; z-index: 50; cursor: pointer; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4)); }
-  #player svg { width: 100%; height: 100%; display: block; }
-  /* Virtual joystick: the whole screen becomes the input zone on touch devices only (desktop passes through) */
-  #stickzone { position: fixed; inset: 0; z-index: 49; pointer-events: none; touch-action: none; }
-  @media (pointer: coarse) { #stickzone { pointer-events: auto; } }
-  #stickbase { display: none; position: fixed; width: 96px; height: 96px; margin: -48px 0 0 -48px; border-radius: 50%; border: 2px solid rgba(232, 232, 242, 0.4); background: rgba(232, 232, 242, 0.08); z-index: 52; pointer-events: none; }
-  #stickknob { position: absolute; left: 50%; top: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; background: rgba(232, 232, 242, 0.5); }
-  #playhint { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); background: rgba(16, 16, 31, 0.88); border: 1px solid var(--line); border-radius: 8px; color: var(--text); font-size: 11px; padding: 6px 12px; z-index: 51; pointer-events: none; white-space: nowrap; }
-
-  /* ---------- トースト（Toast.tsx / トップレイヤーpopover） ---------- */
-  #toasts { position: fixed; inset: auto; top: 14px; left: 50%; transform: translateX(-50%); margin: 0; padding: 0; border: none; background: none; overflow: visible; display: grid; gap: 8px; justify-items: center; z-index: 90; pointer-events: none; }
-  .toast { background: rgba(16, 16, 31, 0.92); border: 1px solid var(--line); border-radius: 8px; color: var(--text); font-size: 12px; padding: 8px 16px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45); white-space: nowrap; animation: toastin 0.18s ease-out; }
-  @keyframes toastin { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
-
-/* React版追加: 初期描画前のちらつき防止 */
-#root { min-height: 100vh; }
+}
