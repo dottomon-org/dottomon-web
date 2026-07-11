@@ -23,7 +23,7 @@ export const btnPrimary = `${btnShell} border-acid bg-acid px-3 py-2.25 text-[12
  * touch menus (36px) can differ.
  */
 export const chip =
-  "grid flex-none cursor-pointer place-items-center rounded-[5px] font-mono font-bold text-white " +
+  "grid flex-none cursor-pointer place-items-center rounded-[5px] font-mono font-bold " +
   "hover:bg-[rgba(16,16,31,0.9)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-acid " +
   "[&>svg]:block [&>svg]:size-full";
 
@@ -56,7 +56,7 @@ export const dialogCls =
 export const dialogHead = "mb-3 flex items-center justify-between gap-2.5";
 
 /** 22px overlay chip with its default shade/opacity (bars, dialog buttons) */
-export const chipMd = `${chip} size-[22px] bg-[rgba(16,16,31,0.72)] p-[3px] opacity-60 hover:opacity-100`;
+export const chipMd = `${chip} size-[22px] bg-[rgba(16,16,31,0.72)] p-[3px] text-white opacity-60 hover:opacity-100`;
 
 /** ▸-bulleted list (dialog notes / help) */
 export const vlist = "grid list-none gap-[3px] p-0 [&>li]:before:text-acid [&>li]:before:content-['▸_']";

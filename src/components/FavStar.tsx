@@ -21,8 +21,8 @@ export default function FavStar({ seed, on, t, onToggle, small }: Props) {
   const state = on
     ? "opacity-100 bg-[rgba(16,16,31,0.45)] text-[#ffd23e] [--fav-fill:#ffd23e]"
     : small
-      ? "opacity-0 bg-[rgba(16,16,31,0.72)] group-hover/cell:opacity-60 hover:opacity-100! focus-visible:opacity-100! pointer-coarse:opacity-85 pointer-coarse:bg-[rgba(16,16,31,0.45)]"
-      : "opacity-60 bg-[rgba(16,16,31,0.72)] hover:opacity-100 pointer-coarse:opacity-85 pointer-coarse:bg-[rgba(16,16,31,0.45)]";
+      ? "opacity-0 bg-[rgba(16,16,31,0.72)] text-white group-hover/cell:opacity-60 hover:opacity-100! focus-visible:opacity-100! pointer-coarse:opacity-85 pointer-coarse:bg-[rgba(16,16,31,0.45)]"
+      : "opacity-60 bg-[rgba(16,16,31,0.72)] text-white hover:opacity-100 pointer-coarse:opacity-85 pointer-coarse:bg-[rgba(16,16,31,0.45)]";
   return (
     <button
       className={`${chip} absolute z-[2] p-0.5 pointer-coarse:p-1 ${size} ${state}`}

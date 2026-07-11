@@ -89,7 +89,7 @@ export default function DownloadBar({ seed, t, onPng, onGif, onPlay, onShare, sm
   const bar = small
     ? "top-[3px] right-[3px] bottom-[3px] flex-col justify-between gap-0 opacity-0 group-hover/cell:opacity-100 focus-within:opacity-100 pointer-coarse:flex-row pointer-coarse:opacity-100"
     : "top-1 right-1 gap-[3px] pointer-coarse:flex-row";
-  const item = `${chip} bg-[rgba(16,16,31,0.72)] opacity-60 hover:opacity-100 ${
+  const item = `${chip} bg-[rgba(16,16,31,0.72)] text-white opacity-60 hover:opacity-100 ${
     small ? "size-[18px] p-0.5 text-[6.5px]" : "size-[22px] p-[3px] text-[7.5px]"
   } ${open ? "pointer-coarse:size-9 pointer-coarse:p-[7px] pointer-coarse:text-[10px] pointer-coarse:opacity-100" : ""}`;
 
@@ -99,7 +99,7 @@ export default function DownloadBar({ seed, t, onPng, onGif, onPlay, onShare, sm
     // bubble's own z-index only counts inside it
     <div className={`absolute flex ${open ? "z-[5]" : "z-[2]"} ${bar}`} ref={ref}>
       <button
-        className={`${chip} hidden bg-[rgba(16,16,31,0.45)] p-0 text-[13px] opacity-85 pointer-coarse:grid ${small ? "size-6" : "size-[26px]"}`}
+        className={`${chip} hidden bg-[rgba(16,16,31,0.45)] p-0 text-[13px] text-white opacity-85 pointer-coarse:grid ${small ? "size-6" : "size-[26px]"}`}
         title={t.moreActions}
         aria-label={`${seed}: ${t.moreActions}`}
         aria-expanded={open}
