@@ -1,5 +1,5 @@
 import type { Locale, ResolvedOpts } from "@dotmon/core";
-import { MonsterAvatar } from "@dotmon/react";
+import { MonsterAvatar } from "@dotmon/core/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Fav } from "../hooks/useFavorites";

@@ -1,5 +1,5 @@
 import type { ResolvedOpts } from "@dotmon/core";
-import { MonsterAvatar } from "@dotmon/react";
+import { MonsterAvatar } from "@dotmon/core/react";
 import type { Strings } from "../i18n";
 import { bgStyle } from "../lib/checker";
 import DownloadBar from "./DownloadBar";

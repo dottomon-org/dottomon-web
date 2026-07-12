@@ -16,8 +16,7 @@
     "*": "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
   },
   "dependencies": {
-    "@dotmon/core": "^0.8.0",
-    "@dotmon/react": "^0.1.8",
+    "@dotmon/core": "^0.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
