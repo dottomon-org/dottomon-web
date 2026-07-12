@@ -31,7 +31,7 @@ export default function MainPreview(p: Props) {
       className={`${panel} grid grid-cols-[210px_1fr] items-center gap-4.5 max-md:gap-3 max-sm:grid-cols-1 max-sm:justify-items-center`}
     >
       <div
-        className="relative grid size-[210px] place-items-center rounded-[10px] border border-line"
+        className="relative grid size-52.5 place-items-center rounded-[10px] border border-line"
         style={{ background: bgStyle(p.bg, 20) }}
       >
         <MonsterAvatar
