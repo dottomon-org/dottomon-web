@@ -6,8 +6,14 @@ const OLD_HIST_KEY = "monstermaker:history";
 
 function load(): string[] {
   try {
-    const v = JSON.parse(localStorage.getItem(HIST_KEY) ?? localStorage.getItem(OLD_HIST_KEY) ?? "null");
-    return Array.isArray(v) ? v.filter((s) => typeof s === "string").slice(-10) : [];
+    const v = JSON.parse(
+      localStorage.getItem(HIST_KEY) ??
+        localStorage.getItem(OLD_HIST_KEY) ??
+        "null",
+    );
+    return Array.isArray(v)
+      ? v.filter((s) => typeof s === "string").slice(-10)
+      : [];
   } catch {
     return [];
   }
@@ -20,11 +26,15 @@ export function useNameHistory() {
     try {
       localStorage.setItem(HIST_KEY, JSON.stringify(hist));
       localStorage.removeItem(OLD_HIST_KEY);
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, [hist]);
 
   const push = useCallback((seed: string) => {
-    setHist((prev) => (prev[prev.length - 1] === seed ? prev : [...prev, seed].slice(-10)));
+    setHist((prev) =>
+      prev[prev.length - 1] === seed ? prev : [...prev, seed].slice(-10),
+    );
   }, []);
 
   const back = useCallback((): string | null => {

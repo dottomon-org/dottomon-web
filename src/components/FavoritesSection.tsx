@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import type { Locale, ResolvedOpts } from "@dotmon/core";
 import { MonsterAvatar } from "@dotmon/react";
-import type { Strings } from "../i18n";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Fav } from "../hooks/useFavorites";
+import type { Strings } from "../i18n";
 import { downloadFavoritesZip } from "../lib/actions";
 import { bgStyle } from "../lib/checker";
 import { buildShareUrlFromOpts } from "../lib/shareUrl";
@@ -42,8 +42,17 @@ export default function FavoritesSection(p: Props) {
   const [targetIdx, setTargetIdx] = useState<number | null>(null);
   const [zipProgress, setZipProgress] = useState<[number, number] | null>(null);
   const floatRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{ idx: number; id: number; x: number; y: number } | null>(null);
-  const pressRef = useRef<{ timer: ReturnType<typeof setTimeout>; x: number; y: number } | null>(null);
+  const dragRef = useRef<{
+    idx: number;
+    id: number;
+    x: number;
+    y: number;
+  } | null>(null);
+  const pressRef = useRef<{
+    timer: ReturnType<typeof setTimeout>;
+    x: number;
+    y: number;
+  } | null>(null);
   const onSwapRef = useRef(p.onSwap);
   onSwapRef.current = p.onSwap;
 
@@ -56,7 +65,8 @@ export default function FavoritesSection(p: Props) {
 
   const positionFloat = (x: number, y: number) => {
     const el = floatRef.current;
-    if (el) el.style.transform = `translate(${x - FLOAT_SIZE / 2}px, ${y - FLOAT_SIZE / 2}px)`;
+    if (el)
+      el.style.transform = `translate(${x - FLOAT_SIZE / 2}px, ${y - FLOAT_SIZE / 2}px)`;
   };
 
   const startDrag = (idx: number, id: number, x: number, y: number) => {
@@ -72,7 +82,9 @@ export default function FavoritesSection(p: Props) {
 
   // The favorite slot currently under (x, y), or null when over none
   const slotAt = (x: number, y: number): number | null => {
-    const el = (document.elementFromPoint(x, y) as HTMLElement | null)?.closest?.("[data-favslot]") as HTMLElement | null;
+    const el = (
+      document.elementFromPoint(x, y) as HTMLElement | null
+    )?.closest?.("[data-favslot]") as HTMLElement | null;
     return el ? Number(el.dataset.favslot) : null;
   };
 
@@ -87,6 +99,7 @@ export default function FavoritesSection(p: Props) {
   // regardless of the drag path (a plain splice-insert would shift the cells in
   // between, which reads as a swap only for left/right neighbours).
   const dragging = dragIdx !== null;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: positionFloat/slotAt are stable helpers; the effect must only rebind per drag session
   useEffect(() => {
     if (!dragging) return;
     const last = { x: dragRef.current?.x ?? 0, y: dragRef.current?.y ?? 0 };
@@ -126,7 +139,9 @@ export default function FavoritesSection(p: Props) {
         last.y < EDGE
           ? -Math.ceil(((EDGE - last.y) / EDGE) * MAX_SPEED)
           : last.y > window.innerHeight - EDGE
-            ? Math.ceil(((last.y - (window.innerHeight - EDGE)) / EDGE) * MAX_SPEED)
+            ? Math.ceil(
+                ((last.y - (window.innerHeight - EDGE)) / EDGE) * MAX_SPEED,
+              )
             : 0;
       if (vy) {
         window.scrollBy(0, vy);
@@ -189,7 +204,8 @@ export default function FavoritesSection(p: Props) {
   };
   const slotMove = (e: React.PointerEvent) => {
     const pr = pressRef.current;
-    if (pr && Math.hypot(e.clientX - pr.x, e.clientY - pr.y) > MOVE_CANCEL_PX) clearPress();
+    if (pr && Math.hypot(e.clientX - pr.x, e.clientY - pr.y) > MOVE_CANCEL_PX)
+      clearPress();
   };
 
   // Reorder-mode looks are decided here (not by CSS selectors): the dragged
@@ -214,6 +230,7 @@ export default function FavoritesSection(p: Props) {
         <h2 className={panelH2}>{p.t.favorites}</h2>
         {reorder ? (
           <button
+            type="button"
             id="favdone"
             className={`${btnShell} mb-3 flex-none border-acid bg-acid px-3 py-1 text-[11px] font-bold text-bg`}
             onClick={exitReorder}
@@ -224,24 +241,36 @@ export default function FavoritesSection(p: Props) {
           <div className="flex gap-1.5">
             {p.favs.length > 0 && (
               <button
+                type="button"
                 id="favzip"
                 className={`${ghostBtn} enabled:hover:border-dim enabled:hover:text-ink disabled:cursor-default disabled:tabular-nums`}
                 disabled={zipProgress !== null}
                 onClick={async () => {
                   if (zipProgress) return;
-                  const items = p.favs.map((f) => ({ seed: f.seed, opts: f.opts ?? p.currentOpts }));
+                  const items = p.favs.map((f) => ({
+                    seed: f.seed,
+                    opts: f.opts ?? p.currentOpts,
+                  }));
                   setZipProgress([0, items.length]);
                   try {
-                    await downloadFavoritesZip(items, p.bg, p.locale, (done, total) => setZipProgress([done, total]));
+                    await downloadFavoritesZip(
+                      items,
+                      p.bg,
+                      p.locale,
+                      (done, total) => setZipProgress([done, total]),
+                    );
                   } finally {
                     setZipProgress(null);
                   }
                 }}
               >
-                {zipProgress ? p.t.favZipBusy(zipProgress[0], zipProgress[1]) : p.t.favZip}
+                {zipProgress
+                  ? p.t.favZipBusy(zipProgress[0], zipProgress[1])
+                  : p.t.favZip}
               </button>
             )}
             <button
+              type="button"
               id="favclear"
               className={`${ghostBtn} hover:border-dim hover:text-ink`}
               onClick={() => {
@@ -255,6 +284,7 @@ export default function FavoritesSection(p: Props) {
           </div>
         )}
       </div>
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: suppresses the context menu during touch reordering only */}
       <div
         className={`grid grid-cols-[repeat(auto-fill,minmax(76px,1fr))] gap-2.5 max-sm:grid-cols-3 ${reorder ? "touch-none" : ""}`}
         onContextMenu={(e) => {
@@ -265,7 +295,7 @@ export default function FavoritesSection(p: Props) {
           const fo = f.opts ?? p.currentOpts;
           return (
             <div
-              key={f.seed + "|" + JSON.stringify(f.opts)}
+              key={`${f.seed}|${JSON.stringify(f.opts)}`}
               className={slotCls(i)}
               data-favslot={i}
               onPointerDown={slotDown(i)}

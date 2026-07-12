@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Strings } from "../i18n";
 import { chip } from "../lib/ui";
-import { toast } from "./Toast";
 import { CheckIcon, DlIcon, LinkIcon, PlayIcon } from "./Icons";
+import { toast } from "./Toast";
 
 interface Props {
   seed: string;
@@ -19,7 +19,15 @@ interface Props {
 // On touch devices (pointer-coarse) the actions collapse behind a "⋯" button
 // that opens a speech-bubble menu; on pointer devices the bar renders inline
 // (the menu wrapper is display:contents there, so the bar's flex layout applies)
-export default function DownloadBar({ seed, t, onPng, onGif, onPlay, onShare, small }: Props) {
+export default function DownloadBar({
+  seed,
+  t,
+  onPng,
+  onGif,
+  onPlay,
+  onShare,
+  small,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   // Horizontal clamp for the bubble and the matching arrow offset (see below)
@@ -57,7 +65,8 @@ export default function DownloadBar({ seed, t, onPng, onGif, onPlay, onShare, sm
     const MARGIN = 8;
     let dx = 0;
     if (r.left < MARGIN) dx = MARGIN - r.left;
-    else if (r.right > window.innerWidth - MARGIN) dx = window.innerWidth - MARGIN - r.right;
+    else if (r.right > window.innerWidth - MARGIN)
+      dx = window.innerWidth - MARGIN - r.right;
     setShift(dx);
     const mr = more.getBoundingClientRect();
     setArrowRight(Math.max(6, r.right + dx - (mr.left + mr.width / 2) - 4.5));
@@ -90,15 +99,21 @@ export default function DownloadBar({ seed, t, onPng, onGif, onPlay, onShare, sm
     ? "top-[3px] right-[3px] bottom-[3px] flex-col justify-between gap-0 opacity-0 group-hover/cell:opacity-100 focus-within:opacity-100 pointer-coarse:flex-row pointer-coarse:opacity-100"
     : "top-1 right-1 gap-[3px] pointer-coarse:flex-row";
   const item = `${chip} bg-[rgba(16,16,31,0.72)] text-white opacity-60 hover:opacity-100 ${
-    small ? "size-[18px] p-0.5 text-[6.5px]" : "size-[22px] p-[3px] text-[7.5px]"
+    small
+      ? "size-[18px] p-0.5 text-[6.5px]"
+      : "size-[22px] p-[3px] text-[7.5px]"
   } ${open ? "pointer-coarse:size-9 pointer-coarse:p-[7px] pointer-coarse:text-[10px] pointer-coarse:opacity-100" : ""}`;
 
   return (
     // While the bubble is open the whole bar rises above the neighbouring
     // cells' overlay chips (z-2) — the bar is a stacking context, so the
     // bubble's own z-index only counts inside it
-    <div className={`absolute flex ${open ? "z-[5]" : "z-[2]"} ${bar}`} ref={ref}>
+    <div
+      className={`absolute flex ${open ? "z-[5]" : "z-[2]"} ${bar}`}
+      ref={ref}
+    >
       <button
+        type="button"
         className={`${chip} hidden bg-[rgba(16,16,31,0.45)] p-0 text-[13px] text-white opacity-85 pointer-coarse:grid ${small ? "size-6" : "size-[26px]"}`}
         title={t.moreActions}
         aria-label={`${seed}: ${t.moreActions}`}
@@ -124,13 +139,26 @@ export default function DownloadBar({ seed, t, onPng, onGif, onPlay, onShare, sm
             style={{ right: arrowRight }}
           />
         )}
-        <button className={item} title={t.dlPng} aria-label={`${seed}: ${t.dlPng}`} onClick={act(onPng)}>
+        <button
+          type="button"
+          className={item}
+          title={t.dlPng}
+          aria-label={`${seed}: ${t.dlPng}`}
+          onClick={act(onPng)}
+        >
           <DlIcon />
         </button>
-        <button className={item} title={t.dlGif} aria-label={`${seed}: ${t.dlGif}`} onClick={act(onGif)}>
+        <button
+          type="button"
+          className={item}
+          title={t.dlGif}
+          aria-label={`${seed}: ${t.dlGif}`}
+          onClick={act(onGif)}
+        >
           GIF
         </button>
         <button
+          type="button"
           className={item}
           title={t.dlPlay}
           aria-label={`${seed}: ${t.dlPlay}`}
@@ -143,7 +171,13 @@ export default function DownloadBar({ seed, t, onPng, onGif, onPlay, onShare, sm
           <PlayIcon />
         </button>
         {onShare && (
-          <button className={item} title={copied ? t.shareCopied : t.shareLink} aria-label={`${seed}: ${t.shareLink}`} onClick={share}>
+          <button
+            type="button"
+            className={item}
+            title={copied ? t.shareCopied : t.shareLink}
+            aria-label={`${seed}: ${t.shareLink}`}
+            onClick={share}
+          >
             {copied ? <CheckIcon /> : <LinkIcon />}
           </button>
         )}

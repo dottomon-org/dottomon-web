@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
 import type { Locale } from "@dotmon/core";
-import { pickLocale, type LocaleDict } from "@dotmon/core/locales";
+import { type LocaleDict, pickLocale } from "@dotmon/core/locales";
 import { en } from "@dotmon/core/locales/en";
 import { ja } from "@dotmon/core/locales/ja";
+import { useEffect, useState } from "react";
 
 export const DICTS: Record<Locale, LocaleDict> = { en, ja };
 
@@ -34,11 +34,17 @@ export const STRINGS = {
     favZip: "Download all",
     favZipBusy: (done: number, total: number) => `Building… ${done}/${total}`,
     favClearConfirm: "Delete all favorites?",
-    favEmpty: "Hover a monster and hit the star — they gather here (saved in this browser).",
+    favEmpty:
+      "Hover a monster and hit the star — they gather here (saved in this browser).",
     nameLabel: "Name:",
     customStyle: "Custom",
     viewsTitle: "'s views",
-    viewLabels: { front: "front", back: "back", left: "left", right: "right" } as const,
+    viewLabels: {
+      front: "front",
+      back: "back",
+      left: "left",
+      right: "right",
+    } as const,
     zipButton: "Download everything (ZIP)",
     zipBusy: "Building…",
     viewNotes: [
@@ -97,13 +103,20 @@ export const STRINGS = {
     favClear: "すべてクリア",
     favDone: "完了",
     favZip: "まとめてダウンロード",
-    favZipBusy: (done: number, total: number) => `つくっています… ${done}/${total}`,
+    favZipBusy: (done: number, total: number) =>
+      `つくっています… ${done}/${total}`,
     favClearConfirm: "お気に入りをすべて削除しますか？",
-    favEmpty: "モンスターにマウスをのせて ★ を押すと、ここにあつまります（このブラウザにのこります）",
+    favEmpty:
+      "モンスターにマウスをのせて ★ を押すと、ここにあつまります（このブラウザにのこります）",
     nameLabel: "なまえ:",
     customStyle: "とくべつ",
     viewsTitle: " のすがた",
-    viewLabels: { front: "まえ", back: "うしろ", left: "ひだり", right: "みぎ" } as const,
+    viewLabels: {
+      front: "まえ",
+      back: "うしろ",
+      left: "ひだり",
+      right: "みぎ",
+    } as const,
     zipButton: "ぜんぶ入りでダウンロード（ZIP）",
     zipBusy: "つくっています…",
     viewNotes: [
@@ -148,7 +161,9 @@ const BASE = import.meta.env.BASE_URL;
 
 /** basePathを除いたサイト内相対パス（先頭スラッシュ付き）を返す */
 function stripBase(pathname: string): string {
-  return pathname.startsWith(BASE) ? "/" + pathname.slice(BASE.length) : pathname;
+  return pathname.startsWith(BASE)
+    ? `/${pathname.slice(BASE.length)}`
+    : pathname;
 }
 
 function initialLocale(): Locale {
@@ -156,7 +171,9 @@ function initialLocale(): Locale {
   try {
     const saved = localStorage.getItem(LOCALE_KEY);
     if (saved === "ja" || saved === "en") return saved;
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   const rel = stripBase(location.pathname);
   if (rel === "/ja" || rel.startsWith("/ja/")) return "ja";
   return pickLocale(navigator.languages, ["en", "ja"] as const, "en");
@@ -172,14 +189,20 @@ export function useLocale() {
       const url = new URL(location.href);
       const rel = stripBase(url.pathname);
       const rest = rel.replace(/^\/ja(\/|$)/, "/");
-      const newRel = locale === "ja" ? "/ja" + (rest === "/" ? "/" : rest) : rest;
+      const newRel = locale === "ja" ? `/ja${rest === "/" ? "/" : rest}` : rest;
       url.pathname = BASE.replace(/\/$/, "") + newRel;
       window.history.replaceState(null, "", url);
-    } catch { /* file://等では無視 */ }
+    } catch {
+      /* file://等では無視 */
+    }
   }, [locale]);
 
   const setLocale = (l: Locale) => {
-    try { localStorage.setItem(LOCALE_KEY, l); } catch { /* ignore */ }
+    try {
+      localStorage.setItem(LOCALE_KEY, l);
+    } catch {
+      /* ignore */
+    }
     setLocaleState(l);
   };
   return { locale, setLocale, t: STRINGS[locale], dict: DICTS[locale] };

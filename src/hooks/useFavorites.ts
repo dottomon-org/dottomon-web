@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
 import type { ResolvedOpts } from "@dotmon/core";
+import { useCallback, useEffect, useState } from "react";
 
 // Old entry shapes (bare seed strings / legMode) are migrated on load
 const FAV_KEY = "dotmon:favorites";
@@ -11,7 +11,10 @@ export interface Fav {
   opts: ResolvedOpts | null;
 }
 
-export function sameOpts(a: ResolvedOpts | null, b: ResolvedOpts | null): boolean {
+export function sameOpts(
+  a: ResolvedOpts | null,
+  b: ResolvedOpts | null,
+): boolean {
   if (!a || !b) return a === b;
   return (
     a.connected === b.connected &&
@@ -25,8 +28,12 @@ export function sameOpts(a: ResolvedOpts | null, b: ResolvedOpts | null): boolea
 
 function normalize(f: unknown): Fav | null {
   if (typeof f === "string") return { seed: f, opts: null };
-  if (!f || typeof f !== "object" || typeof (f as Fav).seed !== "string") return null;
-  const raw = f as { seed: string; opts?: (ResolvedOpts & { legMode?: string }) | null };
+  if (!f || typeof f !== "object" || typeof (f as Fav).seed !== "string")
+    return null;
+  const raw = f as {
+    seed: string;
+    opts?: (ResolvedOpts & { legMode?: string }) | null;
+  };
   if (!raw.opts) return { seed: raw.seed, opts: null };
   const { legMode, ...rest } = raw.opts;
   return {
@@ -43,7 +50,11 @@ function normalize(f: unknown): Fav | null {
 
 function load(): Fav[] {
   try {
-    const v = JSON.parse(localStorage.getItem(FAV_KEY) ?? localStorage.getItem(OLD_FAV_KEY) ?? "null");
+    const v = JSON.parse(
+      localStorage.getItem(FAV_KEY) ??
+        localStorage.getItem(OLD_FAV_KEY) ??
+        "null",
+    );
     if (!Array.isArray(v)) return [];
     return v.map(normalize).filter((f): f is Fav => f !== null);
   } catch {
@@ -58,11 +69,14 @@ export function useFavorites() {
     try {
       localStorage.setItem(FAV_KEY, JSON.stringify(favs));
       localStorage.removeItem(OLD_FAV_KEY);
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, [favs]);
 
   const isFav = useCallback(
-    (seed: string, opts: ResolvedOpts | null) => favs.some((f) => f.seed === seed && sameOpts(f.opts, opts)),
+    (seed: string, opts: ResolvedOpts | null) =>
+      favs.some((f) => f.seed === seed && sameOpts(f.opts, opts)),
     [favs],
   );
   const toggle = useCallback((seed: string, opts: ResolvedOpts | null) => {
@@ -76,7 +90,8 @@ export function useFavorites() {
   /** Reorder: exchange the favorites at positions `a` and `b` */
   const swap = useCallback((a: number, b: number) => {
     setFavs((prev) => {
-      if (a === b || a < 0 || b < 0 || a >= prev.length || b >= prev.length) return prev;
+      if (a === b || a < 0 || b < 0 || a >= prev.length || b >= prev.length)
+        return prev;
       const next = prev.slice();
       [next[a], next[b]] = [next[b], next[a]];
       return next;
