@@ -4,9 +4,9 @@ import {
   presetKeyFromOpts,
   type ResolvedOpts,
   type View,
-} from "@dotmon/core";
-import type { LocaleDict } from "@dotmon/core/locales";
-import { MonsterAvatar } from "@dotmon/core/react";
+} from "dottomon";
+import type { LocaleDict } from "dottomon/locales";
+import { MonsterAvatar } from "dottomon/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Strings } from "../i18n";
 import { downloadGif, downloadPng, downloadZip } from "../lib/actions";

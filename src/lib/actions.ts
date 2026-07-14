@@ -4,7 +4,7 @@ import {
   type ResolvedOpts,
   safeFileName,
   type View,
-} from "@dotmon/core";
+} from "dottomon";
 import {
   assetReadme,
   buildZip,
@@ -14,7 +14,7 @@ import {
   toPng,
   toSpriteSheet,
   type ZipEntry,
-} from "@dotmon/core/render";
+} from "dottomon/render";
 
 export function downloadBlob(blob: Blob, filename: string) {
   const a = document.createElement("a");
@@ -137,5 +137,5 @@ export async function downloadFavoritesZip(
     done++;
     onProgress?.(done, favs.length);
   }
-  downloadBlob(buildZip(files), "dotmon-favorites.zip");
+  downloadBlob(buildZip(files), "dottomon-favorites.zip");
 }

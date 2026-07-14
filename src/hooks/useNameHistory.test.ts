@@ -2,7 +2,8 @@ import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { useNameHistory } from "./useNameHistory";
 
-const HIST_KEY = "dotmon:history";
+const HIST_KEY = "dottomon:history";
+const PRE_RENAME_KEY = "dotmon:history";
 const OLD_HIST_KEY = "monstermaker:history";
 
 const stored = (): string[] =>
@@ -71,5 +72,14 @@ describe("useNameHistory", () => {
     expect(stored()).toEqual(["Poko", "ズゴン"]);
     expect(localStorage.getItem(OLD_HIST_KEY)).toBeNull();
     expect(result.current.canBack).toBe(true);
+  });
+
+  it("migrates history from the pre-rename dotmon key", () => {
+    // Arrange + Act + Assert (small): dotmon-era history moves to the new
+    // key and the old key is removed
+    localStorage.setItem(PRE_RENAME_KEY, JSON.stringify(["Poko", "ズゴン"]));
+    renderHook(() => useNameHistory());
+    expect(stored()).toEqual(["Poko", "ズゴン"]);
+    expect(localStorage.getItem(PRE_RENAME_KEY)).toBeNull();
   });
 });

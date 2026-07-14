@@ -1,9 +1,10 @@
-import { resolveOptions } from "@dotmon/core";
 import { act, renderHook } from "@testing-library/react";
+import { resolveOptions } from "dottomon";
 import { beforeEach, describe, expect, it } from "vitest";
 import { type Fav, sameOpts, useFavorites } from "./useFavorites";
 
-const FAV_KEY = "dotmon:favorites";
+const FAV_KEY = "dottomon:favorites";
+const PRE_RENAME_KEY = "dotmon:favorites";
 const OLD_FAV_KEY = "monsterlab:favorites";
 
 const retro = resolveOptions({ preset: "retro" });
@@ -64,6 +65,22 @@ describe("useFavorites", () => {
     ]);
     expect(stored()).toEqual(result.current.favs);
     expect(localStorage.getItem(OLD_FAV_KEY)).toBeNull();
+  });
+
+  it("migrates favorites from the pre-rename dotmon key", () => {
+    // Arrange: favorites saved under the dotmon-era key (current schema)
+    localStorage.setItem(
+      PRE_RENAME_KEY,
+      JSON.stringify([{ seed: "Poko", opts: null }]),
+    );
+
+    // Act
+    const { result } = renderHook(() => useFavorites());
+
+    // Assert: data moves to dottomon:favorites and the old key is removed
+    expect(result.current.favs).toEqual([{ seed: "Poko", opts: null }]);
+    expect(stored()).toEqual(result.current.favs);
+    expect(localStorage.getItem(PRE_RENAME_KEY)).toBeNull();
   });
 
   it("drops malformed entries instead of crashing", () => {

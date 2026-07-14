@@ -1,5 +1,5 @@
-import { getStats, type ResolvedOpts } from "@dotmon/core";
-import type { LocaleDict } from "@dotmon/core/locales";
+import { getStats, type ResolvedOpts } from "dottomon";
+import type { LocaleDict } from "dottomon/locales";
 import { useMemo } from "react";
 
 // Bar colors and max values are presentation concerns, so the web app owns

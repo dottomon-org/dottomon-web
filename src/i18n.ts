@@ -1,7 +1,7 @@
-import type { Locale } from "@dotmon/core";
-import { type LocaleDict, pickLocale } from "@dotmon/core/locales";
-import { en } from "@dotmon/core/locales/en";
-import { ja } from "@dotmon/core/locales/ja";
+import type { Locale } from "dottomon";
+import { type LocaleDict, pickLocale } from "dottomon/locales";
+import { en } from "dottomon/locales/en";
+import { ja } from "dottomon/locales/ja";
 import { useEffect, useState } from "react";
 
 export const DICTS: Record<Locale, LocaleDict> = { en, ja };
@@ -154,9 +154,11 @@ export const STRINGS = {
 
 export type Strings = (typeof STRINGS)["en"] | (typeof STRINGS)["ja"];
 
-const LOCALE_KEY = "dotmon:locale";
+const LOCALE_KEY = "dottomon:locale";
+// Key from before the dottomon rename; migrated on first read
+const OLD_LOCALE_KEY = "dotmon:locale";
 
-// GitHub Pages等のサブパス配信に対応（例: "/dotmon-web/"）。常に末尾スラッシュ付き
+// GitHub Pages等のサブパス配信に対応（例: "/dottomon-web/"）。常に末尾スラッシュ付き
 const BASE = import.meta.env.BASE_URL;
 
 /** basePathを除いたサイト内相対パス（先頭スラッシュ付き）を返す */
@@ -169,8 +171,13 @@ function stripBase(pathname: string): string {
 function initialLocale(): Locale {
   // 優先順位: 明示選択 > URLパス > ブラウザ言語 > en
   try {
-    const saved = localStorage.getItem(LOCALE_KEY);
-    if (saved === "ja" || saved === "en") return saved;
+    const saved =
+      localStorage.getItem(LOCALE_KEY) ?? localStorage.getItem(OLD_LOCALE_KEY);
+    if (saved === "ja" || saved === "en") {
+      localStorage.setItem(LOCALE_KEY, saved);
+      localStorage.removeItem(OLD_LOCALE_KEY);
+      return saved;
+    }
   } catch {
     /* ignore */
   }

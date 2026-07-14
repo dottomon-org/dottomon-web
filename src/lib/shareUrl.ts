@@ -3,7 +3,7 @@ import {
   type Preset,
   presetKeyFromOpts,
   type ResolvedOpts,
-} from "@dotmon/core";
+} from "dottomon";
 import type { Tweaks } from "../components/Sidebar";
 
 /** Default tweaks per style (= what the style buttons reset to) */
