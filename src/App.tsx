@@ -3,7 +3,7 @@ import {
   type ResolvedOpts,
   randomName,
   resolveOptions,
-} from "@dotmon/core";
+} from "dottomon";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import FavoritesSection from "./components/FavoritesSection";
 import HelpDialog from "./components/HelpDialog";
@@ -164,7 +164,7 @@ export default function App() {
                 pixel monster maker
               </div>
               <h1 className="text-[clamp(22px,3.6vw,32px)] font-bold tracking-[0.04em]">
-                dotmon
+                dottomon
                 <span className="animate-blink text-acid motion-reduce:animate-none">
                   _
                 </span>
@@ -194,7 +194,7 @@ export default function App() {
             canBack={nameHistory.canBack}
             onBack={handleBack}
             onHelp={() => setHelpOpen(true)}
-            seed={seed || "dotmon"}
+            seed={seed || "dottomon"}
             preset={preset}
             onSelectPreset={selectPreset}
             tweaks={tweaks}
@@ -290,16 +290,16 @@ export default function App() {
               {t.footerMade}{" "}
               <a
                 className="underline hover:text-acid"
-                href="https://github.com/dotmon-org/dotmon"
+                href="https://github.com/dottomon-org/dottomon"
                 target="_blank"
                 rel="noreferrer"
               >
-                @dotmon/core
+                dottomon
               </a>{" "}
               ·{" "}
               <a
                 className="underline hover:text-acid"
-                href="https://www.npmjs.com/package/@dotmon/core"
+                href="https://www.npmjs.com/package/dottomon"
                 target="_blank"
                 rel="noreferrer"
               >

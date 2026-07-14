@@ -1,4 +1,4 @@
-import { generateSvg, type ResolvedOpts, type View } from "@dotmon/core";
+import { generateSvg, type ResolvedOpts, type View } from "dottomon";
 import { useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 

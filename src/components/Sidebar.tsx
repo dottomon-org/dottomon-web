@@ -1,6 +1,6 @@
-import { type Legs, type Preset, presets } from "@dotmon/core";
-import type { LocaleDict } from "@dotmon/core/locales";
-import { MonsterAvatar } from "@dotmon/core/react";
+import { type Legs, type Preset, presets } from "dottomon";
+import type { LocaleDict } from "dottomon/locales";
+import { MonsterAvatar } from "dottomon/react";
 import type { Strings } from "../i18n";
 import {
   checkboxCls,

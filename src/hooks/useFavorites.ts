@@ -1,10 +1,10 @@
-import type { ResolvedOpts } from "@dotmon/core";
+import type { ResolvedOpts } from "dottomon";
 import { useCallback, useEffect, useState } from "react";
 
 // Old entry shapes (bare seed strings / legMode) are migrated on load
-const FAV_KEY = "dotmon:favorites";
-// Key from before the service was named; migrated to FAV_KEY on load
-const OLD_FAV_KEY = "monsterlab:favorites";
+const FAV_KEY = "dottomon:favorites";
+// Keys from earlier service names; migrated to FAV_KEY on load
+const OLD_FAV_KEYS = ["dotmon:favorites", "monsterlab:favorites"];
 
 export interface Fav {
   seed: string;
@@ -50,11 +50,10 @@ function normalize(f: unknown): Fav | null {
 
 function load(): Fav[] {
   try {
-    const v = JSON.parse(
+    const raw =
       localStorage.getItem(FAV_KEY) ??
-        localStorage.getItem(OLD_FAV_KEY) ??
-        "null",
-    );
+      OLD_FAV_KEYS.map((k) => localStorage.getItem(k)).find((v) => v !== null);
+    const v = JSON.parse(raw ?? "null");
     if (!Array.isArray(v)) return [];
     return v.map(normalize).filter((f): f is Fav => f !== null);
   } catch {
@@ -68,7 +67,7 @@ export function useFavorites() {
   useEffect(() => {
     try {
       localStorage.setItem(FAV_KEY, JSON.stringify(favs));
-      localStorage.removeItem(OLD_FAV_KEY);
+      for (const k of OLD_FAV_KEYS) localStorage.removeItem(k);
     } catch {
       /* ignore */
     }

@@ -1,16 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 
-const HIST_KEY = "dotmon:history";
-// Key from before the service was named; migrated to HIST_KEY on load
-const OLD_HIST_KEY = "monstermaker:history";
+const HIST_KEY = "dottomon:history";
+// Keys from earlier service names; migrated to HIST_KEY on load
+const OLD_HIST_KEYS = ["dotmon:history", "monstermaker:history"];
 
 function load(): string[] {
   try {
-    const v = JSON.parse(
+    const raw =
       localStorage.getItem(HIST_KEY) ??
-        localStorage.getItem(OLD_HIST_KEY) ??
-        "null",
-    );
+      OLD_HIST_KEYS.map((k) => localStorage.getItem(k)).find((v) => v !== null);
+    const v = JSON.parse(raw ?? "null");
     return Array.isArray(v)
       ? v.filter((s) => typeof s === "string").slice(-10)
       : [];
@@ -25,7 +24,7 @@ export function useNameHistory() {
   useEffect(() => {
     try {
       localStorage.setItem(HIST_KEY, JSON.stringify(hist));
-      localStorage.removeItem(OLD_HIST_KEY);
+      for (const k of OLD_HIST_KEYS) localStorage.removeItem(k);
     } catch {
       /* ignore */
     }

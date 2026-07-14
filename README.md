@@ -1,13 +1,13 @@
-# dotmon-web
+# dottomon-web
 
 <img width="2110" height="1790" alt="スクリーンショット 2026-07-09 23 51 27" src="https://github.com/user-attachments/assets/755fab60-4b62-418d-815b-9ee098eb4844" />
 
-The official web app for [dotmon](https://github.com/dotmon-org/dotmon) — type a name, get your own pixel monster.
+The official web app for [dottomon](https://github.com/dottomon-org/dottomon) — type a name, get your own pixel monster.
 
 Built with React + Vite on top of the published packages:
 
-- [`@dotmon/core`](https://www.npmjs.com/package/@dotmon/core) — generation, stats, PNG/GIF/sprite-sheet/ZIP encoders, locale dictionaries
-- [`@dotmon/react`](https://www.npmjs.com/package/@dotmon/react) — `<MonsterAvatar />` (all avatars share one animation ticker)
+- [`dottomon`](https://www.npmjs.com/package/dottomon) — generation, stats, PNG/GIF/sprite-sheet/ZIP encoders, locale dictionaries
+- [`dottomon/react`](https://www.npmjs.com/package/dottomon) — `<MonsterAvatar />` (all avatars share one animation ticker)
 
 ## Features
 
@@ -32,4 +32,4 @@ npm run build     # tsc + vite build → dist/
 This repo owns: UI copy & layout, style cards, favorites & name history (localStorage keys
 `monsterlab:favorites` / `monstermaker:history`, kept compatible with the pre-library HTML version),
 `?seed=` handling, locale routing, and the walking player. Everything about *generating* monsters
-lives in `@dotmon/core`.
+lives in `dottomon`.
