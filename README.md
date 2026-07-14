@@ -1,6 +1,6 @@
 # dottomon-web
 
-<img width="2110" height="1790" alt="スクリーンショット 2026-07-09 23 51 27" src="https://github.com/user-attachments/assets/755fab60-4b62-418d-815b-9ee098eb4844" />
+<img width="2110" alt="dottomon web" src="https://raw.githubusercontent.com/dottomon-org/dottomon-web/main/docs/images/hero.jpg" />
 
 The official web app for [dottomon](https://github.com/dottomon-org/dottomon) — type a name, get your own pixel monster.
 
