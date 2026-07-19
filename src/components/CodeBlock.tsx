@@ -21,7 +21,7 @@ interface Props {
 export default function CodeBlock({ code, lang, copyLabel, copiedMsg }: Props) {
   return (
     <div className="relative min-w-0">
-      <pre className="overflow-x-auto rounded-lg border border-line bg-bg p-3 pr-16 text-[12px] leading-[1.7] text-ink">
+      <pre className="overflow-x-auto rounded-lg border border-line bg-panel2 p-3 pr-16 text-[12px] leading-[1.7] text-ink">
         {lang ? (
           <code
             // biome-ignore lint/security/noDangerouslySetInnerHtml: Prism output of our own string literals, no user input
@@ -37,7 +37,7 @@ export default function CodeBlock({ code, lang, copyLabel, copiedMsg }: Props) {
         type="button"
         title={copyLabel}
         aria-label={copyLabel}
-        className={`absolute top-2 right-2 cursor-pointer rounded border border-line bg-panel2 px-1.5 py-0.5 font-mono text-[10px] text-dim hover:text-ink ${focusRing}`}
+        className={`absolute top-2 right-2 cursor-pointer rounded border border-line bg-panel px-1.5 py-0.5 font-mono text-[10px] text-dim hover:text-ink ${focusRing}`}
         onClick={() =>
           navigator.clipboard
             .writeText(code)
