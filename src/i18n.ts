@@ -3,6 +3,7 @@ import { type LocaleDict, pickLocale } from "dottomon/locales";
 import { en } from "dottomon/locales/en";
 import { ja } from "dottomon/locales/ja";
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const DICTS: Record<Locale, LocaleDict> = { en, ja };
 
@@ -78,6 +79,8 @@ export const STRINGS = {
     ],
     footerMade: "Built with",
     menuOpen: "Settings",
+    navPlayground: "Playground",
+    navMenu: "Menu",
   },
   ja: {
     sub: "なまえを入れると、あなただけのモンスターがうまれる。おなじ名前からは、いつでもおなじ子がうまれます。",
@@ -149,6 +152,8 @@ export const STRINGS = {
     ],
     footerMade: "つくったもの:",
     menuOpen: "せってい",
+    navPlayground: "あそびば",
+    navMenu: "メニュー",
   },
 } as const;
 
@@ -188,21 +193,29 @@ function initialLocale(): Locale {
 
 export function useLocale() {
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // URLパスと<html lang>を同期（BASE = en, BASE + ja/ = ja。?seed=は維持）
+  // Keep the URL path and <html lang> in sync with the locale
+  // ("/" = en, "/ja/…" = ja). Query and hash are read fresh from
+  // window.location: share params may have been stripped by an effect
+  // that ran before this one, and the router snapshot would re-add them.
   useEffect(() => {
     document.documentElement.lang = locale;
-    try {
-      const url = new URL(location.href);
-      const rel = stripBase(url.pathname);
-      const rest = rel.replace(/^\/ja(\/|$)/, "/");
-      const newRel = locale === "ja" ? `/ja${rest === "/" ? "/" : rest}` : rest;
-      url.pathname = BASE.replace(/\/$/, "") + newRel;
-      window.history.replaceState(null, "", url);
-    } catch {
-      /* file://等では無視 */
+    const rest = location.pathname.replace(/^\/ja(\/|$)/, "/");
+    const want =
+      locale === "ja" ? (rest === "/" ? "/ja/" : `/ja${rest}`) : rest;
+    if (want !== location.pathname) {
+      navigate(
+        {
+          pathname: want,
+          search: window.location.search,
+          hash: window.location.hash,
+        },
+        { replace: true },
+      );
     }
-  }, [locale]);
+  }, [locale, location.pathname, navigate]);
 
   const setLocale = (l: Locale) => {
     try {

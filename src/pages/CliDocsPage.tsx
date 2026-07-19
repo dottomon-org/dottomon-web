@@ -1,0 +1,244 @@
+import CodeBlock from "../components/CodeBlock";
+import { useLocaleCtx } from "../components/Layout";
+import TermShot from "../components/TermShot";
+import { panel, panelH2 } from "../lib/ui";
+import { DEMO_BASIC } from "./cliDemos";
+
+interface OptRow {
+  flag: string;
+  d: string;
+}
+
+interface OptGroup {
+  title: string;
+  rows: OptRow[];
+}
+
+const COPY = {
+  en: {
+    intro:
+      "Make a monster anytime in your terminal too — with a single npx command.",
+    copy: "Copy command",
+    runDesc:
+      "No install step — npx runs it directly. The name is the seed, so the same name gives you the same monster as the web app.",
+    monoNote:
+      "The sprite is drawn with block characters (▀ ▄ █), so it needs a monospace terminal font. With a proportional font the columns won't line up and the art can look broken.",
+    optionsDesc: "Run npx dottomon --help to see this list in your terminal.",
+    groups: [
+      {
+        title: "Display",
+        rows: [
+          {
+            flag: "-s, --style <mochi|retro|chaos>",
+            d: "style preset (default: mochi)",
+          },
+          {
+            flag: "--view <front|back|left|right>",
+            d: "viewing direction (default: front)",
+          },
+          { flag: "-c, --card", d: "show an RPG-style card with stats" },
+          {
+            flag: "-C, --card-full",
+            d: "card with colored stat bars (like the web app)",
+          },
+          {
+            flag: "-n, --count <1-10>",
+            d: "siblings side by side (name, name-1, name-2, …)",
+          },
+          {
+            flag: "-w, --walk",
+            d: "play the 2-frame walk animation, then exit",
+          },
+        ],
+      },
+      {
+        title: "Output",
+        rows: [
+          {
+            flag: "-o, --out <file>",
+            d: "save as .svg / .png / .gif (by extension)",
+          },
+          {
+            flag: "--size <px>",
+            d: "image size for --out (png: 512, gif: 256)",
+          },
+          {
+            flag: "-z, --zip",
+            d: "save <name>.zip with every asset (README, 12 PNGs, 4 GIFs, sprite sheet)",
+          },
+        ],
+      },
+      {
+        title: "Misc",
+        rows: [
+          {
+            flag: "--lang <ja|en>",
+            d: "card/README language (default: from $LANG)",
+          },
+          { flag: "--no-color", d: "plain block characters, no ANSI colors" },
+          { flag: "--no-name", d: "hide the name label under each sprite" },
+        ],
+      },
+    ] as OptGroup[],
+    examples: `npx dottomon Poko                     # sprite + name label
+npx dottomon ポコ --card --lang ja     # stat card in Japanese
+npx dottomon --style chaos --walk     # random name, chaos style, walking
+npx dottomon Poko -n 5                # five siblings side by side
+npx dottomon Poko -o poko.png --size 1024
+npx dottomon Poko --zip               # every asset in one ZIP`,
+  },
+  ja: {
+    intro: "ターミナルでも npx コマンドひとつでいつでもモンスターを作れます。",
+    copy: "コマンドをコピー",
+    runDesc:
+      "インストール不要で npx からそのまま実行できます。名前が seed になるので、おなじ名前からは Web アプリと同じモンスターがうまれます。",
+    monoNote:
+      "スプライトはブロック文字（▀ ▄ █）で描かれるため、等倍（monospace）フォントのターミナルが必要です。プロポーショナルフォントでは桁がそろわず、絵が崩れて見えることがあります。",
+    optionsDesc: "npx dottomon --help でこの一覧をターミナルでも確認できます。",
+    groups: [
+      {
+        title: "Display",
+        rows: [
+          {
+            flag: "-s, --style <mochi|retro|chaos>",
+            d: "スタイルプリセット（デフォルト: mochi）",
+          },
+          {
+            flag: "--view <front|back|left|right>",
+            d: "向き（デフォルト: front）",
+          },
+          { flag: "-c, --card", d: "ステータス付きの RPG 風カードを表示" },
+          {
+            flag: "-C, --card-full",
+            d: "色付きステータスバーのカード（Web アプリと同じ見た目）",
+          },
+          {
+            flag: "-n, --count <1-10>",
+            d: "にた名前のなかまを横に並べる（name, name-1, name-2, …）",
+          },
+          { flag: "-w, --walk", d: "2 コマの歩行アニメを再生して終了" },
+        ],
+      },
+      {
+        title: "Output",
+        rows: [
+          {
+            flag: "-o, --out <file>",
+            d: "拡張子に応じて .svg / .png / .gif で保存",
+          },
+          {
+            flag: "--size <px>",
+            d: "--out の画像サイズ（png: 512、gif: 256）",
+          },
+          {
+            flag: "-z, --zip",
+            d: "全アセット入りの <name>.zip を保存（README、PNG 12 枚、GIF 4 本、スプライトシート）",
+          },
+        ],
+      },
+      {
+        title: "Misc",
+        rows: [
+          {
+            flag: "--lang <ja|en>",
+            d: "カード / README の言語（デフォルト: $LANG から）",
+          },
+          { flag: "--no-color", d: "ANSI カラーなしのプレーンなブロック文字" },
+          { flag: "--no-name", d: "スプライト下の名前ラベルを隠す" },
+        ],
+      },
+    ] as OptGroup[],
+    examples: `npx dottomon Poko                     # スプライト + 名前ラベル
+npx dottomon ポコ --card --lang ja     # 日本語のステータスカード
+npx dottomon --style chaos --walk     # 名前おまかせ・カオス・歩行アニメ
+npx dottomon Poko -n 5                # なかま 5 ひきを横並びで
+npx dottomon Poko -o poko.png --size 1024
+npx dottomon Poko --zip               # ぜんぶ入り ZIP で保存`,
+  },
+} as const;
+
+const desc = "mb-3 text-[13px]";
+
+export default function CliDocsPage() {
+  const { locale, t } = useLocaleCtx();
+  const c = COPY[locale];
+
+  return (
+    <>
+      <p className="-mt-4 mb-5.5 text-[12.5px] text-dim">{c.intro}</p>
+
+      {/* grid-cols-1 (= minmax(0,1fr)) lets sections shrink below the code
+          blocks' intrinsic width so <pre> scrolls instead of overflowing */}
+      <main className="grid grid-cols-1 gap-4.5 max-md:gap-3">
+        <section className={panel}>
+          <h2 className={panelH2}>Run</h2>
+          <p className={desc}>{c.runDesc}</p>
+          <TermShot
+            command="npx dottomon Poko"
+            lines={DEMO_BASIC}
+            copyLabel={c.copy}
+            copiedMsg={t.shareCopied}
+          />
+          <div className="mt-3 flex items-start gap-2 rounded-lg border border-line border-l-[3px] border-l-acid bg-panel2 p-3 text-[12px] text-dim">
+            <svg
+              viewBox="0 0 24 24"
+              className="mt-px size-4 flex-none text-acid"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 4l9 15.5H3z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M12 10v4"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              />
+              <circle cx="12" cy="17" r="1.2" fill="currentColor" />
+            </svg>
+            <p>{c.monoNote}</p>
+          </div>
+        </section>
+
+        <section className={panel}>
+          <h2 className={panelH2}>Options</h2>
+          <p className="mb-3 text-[12.5px] text-dim">{c.optionsDesc}</p>
+          <div className="grid gap-4">
+            {c.groups.map((g) => (
+              <div key={g.title}>
+                <h3 className="mb-2 text-[11px] font-bold tracking-[0.2em] text-dim uppercase">
+                  {g.title}
+                </h3>
+                <ul className="grid list-none gap-1.5 p-0 text-[12.5px]">
+                  {g.rows.map((r) => (
+                    <li
+                      key={r.flag}
+                      className="grid grid-cols-[240px_1fr] gap-2 max-sm:grid-cols-1 max-sm:gap-0.5"
+                    >
+                      <code className="text-acid">{r.flag}</code>
+                      <span className="text-dim">{r.d}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className={panel}>
+          <h2 className={panelH2}>Examples</h2>
+          <CodeBlock
+            code={c.examples}
+            lang="bash"
+            copyLabel={c.copy}
+            copiedMsg={t.shareCopied}
+          />
+        </section>
+      </main>
+    </>
+  );
+}

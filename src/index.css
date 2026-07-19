@@ -40,3 +40,37 @@
     }
   }
 }
+
+/* Prism syntax theme for docs code blocks, mapped to the site palette
+   (accent colors mirror the stat-bar colors used across the app) */
+.token.comment {
+  color: var(--color-dim);
+}
+.token.punctuation,
+.token.operator {
+  color: var(--color-dim);
+}
+.token.keyword,
+.token.tag {
+  color: #ff6bb3;
+}
+.token.string,
+.token.attr-value,
+.token.char {
+  color: var(--color-acid);
+}
+.token.number,
+.token.boolean {
+  color: #ffd23e;
+}
+.token.function {
+  color: #6bb8ff;
+}
+.token.class-name,
+.token.maybe-class-name {
+  color: #5ce0d8;
+}
+.token.attr-name,
+.token.parameter {
+  color: #ffb85c;
+}
