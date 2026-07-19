@@ -80,7 +80,6 @@ export const STRINGS = {
     footerMade: "Built with",
     menuOpen: "Settings",
     navPlayground: "Playground",
-    docsSoon: "Docs coming soon.",
   },
   ja: {
     sub: "なまえを入れると、あなただけのモンスターがうまれる。おなじ名前からは、いつでもおなじ子がうまれます。",
@@ -153,7 +152,6 @@ export const STRINGS = {
     footerMade: "つくったもの:",
     menuOpen: "せってい",
     navPlayground: "あそびば",
-    docsSoon: "ドキュメントはじゅんび中です。",
   },
 } as const;
 
