@@ -21,6 +21,8 @@ const COPY = {
     copy: "Copy command",
     runDesc:
       "No install step — npx runs it directly. The name is the seed, so the same name gives you the same monster as the web app.",
+    monoNote:
+      "The sprite is drawn with block characters (▀ ▄ █), so it needs a monospace terminal font. With a proportional font the columns won't line up and the art can look broken.",
     optionsDesc: "Run npx dottomon --help to see this list in your terminal.",
     groups: [
       {
@@ -90,6 +92,8 @@ npx dottomon Poko --zip               # every asset in one ZIP`,
     copy: "コマンドをコピー",
     runDesc:
       "インストール不要で npx からそのまま実行できます。名前が seed になるので、おなじ名前からは Web アプリと同じモンスターがうまれます。",
+    monoNote:
+      "スプライトはブロック文字（▀ ▄ █）で描かれるため、等倍（monospace）フォントのターミナルが必要です。プロポーショナルフォントでは桁がそろわず、絵が崩れて見えることがあります。",
     optionsDesc: "npx dottomon --help でこの一覧をターミナルでも確認できます。",
     groups: [
       {
@@ -175,6 +179,29 @@ export default function CliDocsPage() {
             copyLabel={c.copy}
             copiedMsg={t.shareCopied}
           />
+          <div className="mt-3 flex items-start gap-2 rounded-lg border border-line border-l-[3px] border-l-acid bg-panel2 p-3 text-[12px] text-dim">
+            <svg
+              viewBox="0 0 24 24"
+              className="mt-px size-4 flex-none text-acid"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 4l9 15.5H3z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M12 10v4"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              />
+              <circle cx="12" cy="17" r="1.2" fill="currentColor" />
+            </svg>
+            <p>{c.monoNote}</p>
+          </div>
         </section>
 
         <section className={panel}>
