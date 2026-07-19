@@ -98,8 +98,8 @@ export default function TermShot({
   copiedMsg,
 }: Props) {
   return (
-    <div className="min-w-0 overflow-hidden rounded-lg border border-line bg-panel2">
-      <div className="flex items-center gap-1.5 border-b border-line bg-panel px-3 py-2">
+    <div className="min-w-0 overflow-hidden rounded-lg border border-line">
+      <div className="flex items-center gap-1.5 border-b border-[#d3d3da] bg-[#e8e8ec] px-3 py-2">
         <span className="size-2.5 rounded-full bg-[#ff5f57]" />
         <span className="size-2.5 rounded-full bg-[#febc2e]" />
         <span className="size-2.5 rounded-full bg-[#28c840]" />
@@ -107,7 +107,7 @@ export default function TermShot({
           type="button"
           title={copyLabel}
           aria-label={copyLabel}
-          className={`ml-auto cursor-pointer rounded border border-line bg-panel2 px-1.5 py-0.5 font-mono text-[10px] text-dim hover:text-ink ${focusRing}`}
+          className={`ml-auto cursor-pointer rounded border border-[#c8c8d0] bg-white px-1.5 py-0.5 font-mono text-[10px] text-[#5a5a68] hover:text-[#1a1a2e] ${focusRing}`}
           onClick={() =>
             navigator.clipboard
               .writeText(command)
@@ -118,9 +118,11 @@ export default function TermShot({
           copy
         </button>
       </div>
-      <pre className="overflow-x-auto p-3 text-[12px] leading-[1.2] text-ink">
+      {/* Light terminal: captured runs carry their own sprite colors; only the
+          uncolored text (prompt, labels, card border) follows this dark ink */}
+      <pre className="overflow-x-auto bg-white p-3 text-[12px] leading-[1.2] text-[#1f2328]">
         <code>
-          <span className="text-acid">$ </span>
+          <span className="text-[#1a7f37]">$ </span>
           {command}
           {"\n"}
           {lines.map((line, i) => (
