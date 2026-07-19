@@ -2,7 +2,7 @@ import CodeBlock from "../components/CodeBlock";
 import { useLocaleCtx } from "../components/Layout";
 import TermShot from "../components/TermShot";
 import { panel, panelH2 } from "../lib/ui";
-import { DEMO_BASIC, DEMO_CARD_EN, DEMO_CARD_JA } from "./cliDemos";
+import { DEMO_BASIC } from "./cliDemos";
 
 interface OptRow {
   flag: string;
@@ -21,10 +21,6 @@ const COPY = {
     copy: "Copy command",
     runDesc:
       "No install step — npx runs it directly. The name is the seed, so the same name gives you the same monster as the web app.",
-    cardDesc:
-      "--card prints an RPG-style stat card; stats are derived from the name. --card-full (-C) adds colored stat bars, and --lang switches the card language.",
-    cardCmd: "npx dottomon Poko --card",
-    cardDemo: DEMO_CARD_EN,
     optionsDesc: "Run npx dottomon --help to see this list in your terminal.",
     groups: [
       {
@@ -95,10 +91,6 @@ npx dottomon Poko --zip               # every asset in one ZIP`,
     copy: "コマンドをコピー",
     runDesc:
       "インストール不要で npx からそのまま実行できます。名前が seed になるので、おなじ名前からは Web アプリと同じモンスターがうまれます。",
-    cardDesc:
-      "--card は RPG 風のステータスカードを表示します（ステータスは名前から決まります）。--card-full (-C) は色付きステータスバー、--lang はカードの言語を切り替えます。",
-    cardCmd: "npx dottomon ポコ --card --lang ja",
-    cardDemo: DEMO_CARD_JA,
     optionsDesc: "npx dottomon --help でこの一覧をターミナルでも確認できます。",
     groups: [
       {
@@ -179,17 +171,6 @@ export default function CliDocsPage() {
           <TermShot
             command="npx dottomon Poko"
             lines={DEMO_BASIC}
-            copyLabel={c.copy}
-            copiedMsg={t.shareCopied}
-          />
-        </section>
-
-        <section className={panel}>
-          <h2 className={panelH2}>Cards</h2>
-          <p className={desc}>{c.cardDesc}</p>
-          <TermShot
-            command={c.cardCmd}
-            lines={c.cardDemo}
             copyLabel={c.copy}
             copiedMsg={t.shareCopied}
           />
