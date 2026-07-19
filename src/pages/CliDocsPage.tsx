@@ -224,6 +224,7 @@ export default function CliDocsPage() {
           <h2 className={panelH2}>Examples</h2>
           <CodeBlock
             code={c.examples}
+            lang="bash"
             copyLabel={c.copy}
             copiedMsg={t.shareCopied}
           />

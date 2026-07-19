@@ -66,7 +66,8 @@ export default function TermShot({
           copy
         </button>
       </div>
-      <pre className="overflow-x-auto p-3 text-[12px] leading-[1.25] text-ink">
+      {/* leading-none: half-block rows must touch or the sprite shows gaps */}
+      <pre className="overflow-x-auto p-3 text-[12px] leading-none text-ink">
         <code>
           <span className="text-acid">$ </span>
           {command}

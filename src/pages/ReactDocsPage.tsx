@@ -1,7 +1,7 @@
 import type { Preset, View } from "dottomon";
 import { MonsterAvatar } from "dottomon/react";
 import { type ReactNode, useState } from "react";
-import CodeBlock from "../components/CodeBlock";
+import CodeBlock, { type CodeLang } from "../components/CodeBlock";
 import { useLocaleCtx } from "../components/Layout";
 import { CHECKER } from "../lib/checker";
 import { inputText, panel, panelH2 } from "../lib/ui";
@@ -157,8 +157,13 @@ export default function ReactDocsPage() {
   const c = COPY[locale];
   const [seedInput, setSeedInput] = useState("Poko");
   const seed = seedInput.trim() || "Poko";
-  const block = (code: string) => (
-    <CodeBlock code={code} copyLabel={c.copy} copiedMsg={t.shareCopied} />
+  const block = (code: string, lang: CodeLang = "tsx") => (
+    <CodeBlock
+      code={code}
+      lang={lang}
+      copyLabel={c.copy}
+      copiedMsg={t.shareCopied}
+    />
   );
 
   return (
@@ -168,7 +173,7 @@ export default function ReactDocsPage() {
       <main className="grid gap-4.5 max-md:gap-3">
         <section className={panel}>
           <h2 className={panelH2}>Install</h2>
-          {block("npm install dottomon")}
+          {block("npm install dottomon", "bash")}
           <p className="mt-3 text-[12.5px] text-dim">{c.installNote}</p>
         </section>
 
