@@ -170,7 +170,9 @@ export default function ReactDocsPage() {
     <>
       <p className="-mt-4 mb-5.5 text-[12.5px] text-dim">{c.intro}</p>
 
-      <main className="grid gap-4.5 max-md:gap-3">
+      {/* grid-cols-1 (= minmax(0,1fr)) lets sections shrink below the code
+          blocks' intrinsic width so <pre> scrolls instead of overflowing */}
+      <main className="grid grid-cols-1 gap-4.5 max-md:gap-3">
         <section className={panel}>
           <h2 className={panelH2}>Install</h2>
           {block("npm install dottomon", "bash")}
